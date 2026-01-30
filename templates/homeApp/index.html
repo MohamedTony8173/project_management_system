@@ -1,0 +1,194 @@
+{% extends 'base.html' %}
+{% block title %}
+  cms
+{% endblock %}
+{% block main_content %}
+  <div class="row my-2">
+    <div class="col-md-8">
+      <h5>Projects</h5>
+      <div class="card border-0 px-2">
+        <table class="table table-hover">
+          <thead>
+            <th>Order</th>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Priority</th>
+          </thead>
+          <tbody>
+            {% for pro in projects %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ pro.name }}</td>
+                <td>{{ pro.start_date }}</td>
+                <td>{{ pro.get_due_date }} Days Remain</td>
+                <td>{{ pro.status }}</td>
+                <td class="text-{{ pro.get_priority_color }}">{{ pro.priority }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="" class="my-2 btn btn-outline-dark mb-3 ms-auto" style="width: 150px;">View All Project</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h5>Progress Of Project</h5>
+      <div class="card stretch-full">
+        <div class="p-3">
+          <div class="w-100">
+            {% for pro in projects %}
+              <div class="d-flex align-items-center justify-content-between">
+                <a href="javascript:void(0);" class="fs-12 fw-medium text-muted"><span class="text-truncate-1-line">{{ pro.name }}<i class="feather-link-2 fs-10 ms-1"></i></span></a>
+                <div class="ms-3">
+                  <span class="fs-12 text-muted text-truncate-1-line">
+                    {{ pro.progress }}/100 Tasks{% if pro.progress == 100 %}
+                      Completed
+                    {% elif pro.progress == 50 %}
+                      In Progressing
+                    {% else %}
+                      Working On It Soon
+                    {% endif %}<span class="fs-11 text-muted">({{ pro.progress }}%)</span>
+                  </span>
+                </div>
+              </div>
+              <div class="progress mt-2 ht-5">
+                <div class="progress-bar bg-{% if pro.progress == 100 %}
+                    
+                    success
+
+                  {% else %}
+                    
+                    primary
+
+                  {% endif %}"
+                  role="progressbar"
+                  style="width: {{ pro.progress }}%"></div>
+              </div>
+              <br />
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% comment %}task here{% endcomment %}
+  <div class="row my-2">
+    <div class="col-md-8">
+      <h5>Tasks</h5>
+      <div class="card border-0 px-2">
+        <table class="table table-hover">
+          <thead>
+            <th>Order</th>
+            <th>Name</th>
+            <th>Start Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+            <th>Priority</th>
+          </thead>
+          <tbody>
+            {% for task in tasks %}
+              <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ task.name }}</td>
+                <td>{{ task.start_date }}</td>
+                <td>{{ task.get_due_date }} Days Remain</td>
+                <td>{{ task.status }}</td>
+                <td class="text-{{ task.get_priority_color }}">{{ task.priority }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <a href="" class="my-2 btn btn-outline-dark mb-3 ms-auto" style="width: 150px;">View All Tasks</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h5>Progress Of Tasks</h5>
+      <div class="card stretch-full">
+        <div class="p-3">
+          <div class="w-100">
+            {% for task in tasks %}
+              <div class="d-flex align-items-center justify-content-between">
+                <a href="javascript:void(0);" class="fs-12 fw-medium text-muted"><span class="text-truncate-1-line">{{ task.name }}<i class="feather-link-2 fs-10 ms-1"></i></span></a>
+                <div class="ms-3">
+                  <span class="fs-12 text-muted text-truncate-1-line">
+                    {{ task.progress }}/100 Tasks{% if task.progress == 100 %}
+                      Completed
+                    {% elif task.progress == 50 %}
+                      In Progressing
+                    {% else %}
+                      Working On It Soon
+                    {% endif %}<span class="fs-11 text-muted">({{ task.progress }}%)</span>
+                  </span>
+                </div>
+              </div>
+              <div class="progress mt-2 ht-5">
+                <div class="progress-bar bg-{% if task.progress == 100 %}
+                    
+                    success
+
+                  {% else %}
+                    
+                    primary
+
+                  {% endif %}"
+                  role="progressbar"
+                  style="width: {{ task.progress }}%"></div>
+              </div>
+              <br />
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  {% comment %}profile user{% endcomment %}
+  <div class="row my-2">
+    {% comment %} member user  {% endcomment %}
+    <div class="col-md-4">
+      <h5>Members ({{profiles.count}})</h5>
+      <div class="card stretch stretch-full">
+        <div class="card-body custom-card-action">
+          {% for profile in profiles %}
+          <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
+            <div class="hstack gap-3">
+              <div class="avatar-image">
+                <img src="{{profile.get_profile_image}}" alt="photo" class="img-fluid" />
+              </div>
+              <div>
+                <a href="javascript:void(0);">{{profile.user.username|title}}</a>
+                <div class="fs-11 text-muted">Frontend Developer</div>
+                <div class="fs-11 text-muted">{{profile.get_date_joined}}</div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center">Update 30 Min Ago</a>
+      </div>
+    </div>
+    {% comment %} notifications  {% endcomment %}
+        <div class="col-md-4">
+      <h5>Notification ({{notifications.count}})</h5>
+      <div class="card stretch stretch-full">
+        <div class="card-body custom-card-action">
+          {% for notification in notifications %}
+          <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
+            <div class="hstack gap-3">
+              <div class="avatar-image">
+                <img src="{{notification.recipient.profile.get_profile_image}}" alt="photo" class="img-fluid" />
+              </div>
+              <div>
+                <a href="javascript:void(0);">{{notification.verb|title}}</a>
+                <div class="fs-11 text-muted">{{notification.date_created_format}}</div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+        <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center">Update 30 Min Ago</a>
+      </div>
+    </div>
+  </div>
+{% endblock %}

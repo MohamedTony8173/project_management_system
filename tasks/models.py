@@ -1,0 +1,78 @@
+from django.db import models
+from projects.models import Project
+from django.contrib.auth import get_user_model
+from django.utils.translation import gettext_lazy as _
+import uuid
+from django.utils import timezone
+
+User = get_user_model()
+
+
+class Task(models.Model):
+    STATUS_CHOICE = (
+        ("To Do", "To Do"),
+        ("In Progress", "In Progress"),
+        ("Completed", "Completed"),
+    )
+    PRIORITY_CHOICE = (
+        ("Low", "Low"),
+        ("Medium", "Medium"),
+        ("High", "High"),
+    )
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    owner = models.ForeignKey(
+        User, verbose_name=_("owner"), on_delete=models.CASCADE, related_name="tasks"
+    )
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project"),
+        on_delete=models.CASCADE,
+        related_name="tasks",
+    )
+    name = models.CharField(_("name"), max_length=255)
+    description = models.TextField(_("description"), null=True, blank=True)
+    status = models.CharField(
+        _("status"), max_length=20, choices=STATUS_CHOICE, default="To Do"
+    )
+    priority = models.CharField(
+        _("priority"), max_length=20, choices=PRIORITY_CHOICE, default="Low"
+    )
+    active = models.BooleanField(_("active"), default=False)
+    start_date = models.DateField(_("start date"))
+    due_date = models.DateField(_("due date"))
+    created_at = models.DateTimeField(_("created at"), auto_now_add=True)
+    update_at = models.DateTimeField(_("update at"), auto_now=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def get_due_date(self):
+        if self.due_date:
+            current_date = timezone.now().date()
+            return (self.due_date - current_date).days
+        else:
+            return None
+
+    def get_priority_color(self):
+        if self.priority == "Low":
+            color = "success"
+        elif self.priority == "Medium":
+            color = "warning"
+        else:
+            color = "danger"
+        return color
+
+    @property
+    def progress(self):
+        progress_dict = {
+            "To Do": 0,
+            "In Progress": 50,
+            "Completed": 100,
+        }
+        return progress_dict.get(self.status, 0)
+    
+    
+
