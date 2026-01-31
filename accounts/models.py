@@ -4,12 +4,14 @@ from django.contrib.auth.models import (
     PermissionsMixin,
     BaseUserManager,
 )
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save, post_delete
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
 import os
 from django.utils.timesince import timesince
 from django.utils import timezone
+import shutil
+
 
 class UserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra):
@@ -49,11 +51,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
 
+def profile_image_location(instance, fileName):
+    date_upload = timezone.now().strftime("%Y-%m-%d")
+    return f"profile/{instance.user.username}/{ date_upload}/ {fileName}"
+
+
 class Profile(models.Model):
     user = models.OneToOneField(
         User, verbose_name=_("user"), on_delete=models.CASCADE, related_name="profile"
     )
-    photo = models.ImageField(_("photo"), upload_to="user_profile/")
+    photo = models.ImageField(_("photo"), upload_to=profile_image_location)
     phone = models.CharField(_("phone"), max_length=16, null=True, blank=True)
     address = models.CharField(_("address"), max_length=255, null=True, blank=True)
     update_at = models.DateTimeField(_("update"), auto_now=True)
@@ -70,14 +77,14 @@ class Profile(models.Model):
         except:
             image = os.path.join("media/default_user.jpg")
         return image
-    
+
     @property
     def get_date_joined(self):
         time_difference = timezone.now() - self.user.join_at
         if time_difference <= timezone.timedelta(days=2):
             return timesince(self.user.join_at) + " ago"
         else:
-            return self.user.join_at.strftime('%d %b')
+            return self.user.join_at.strftime("%d %b")
 
 
 # Signals
@@ -85,3 +92,36 @@ class Profile(models.Model):
 def create_user_profile(sender, instance, **kwargs):
     # if there a user it will updated . else it created one
     Profile.objects.get_or_create(user=instance)
+
+
+# this signal for update profile with delete old
+@receiver(pre_save, sender=Profile)
+def delete_old_file_on_change(sender, instance, **kwargs):
+    if not instance.pk:
+        return False
+
+    try:
+        old_file = sender.objects.get(pk=instance.pk).photo
+    except sender.DoesNotExist:
+        return False
+
+    new_file = instance.photo
+    if old_file:
+        if not old_file == new_file:
+            if os.path.isfile(old_file.path):
+                os.remove(old_file.path)
+
+
+# this for delete also image if he was deleted
+@receiver(post_delete, sender=Profile)
+def delete_file_on_delete(sender, instance, **kwargs):
+    if instance.photo:
+        # if i remove just a path of photo
+        # if os.path.isfile(instance.photo.path):
+        #     os.remove(instance.photo.path)
+
+        # this for delete folder that has folder  hold photo path like /username/2026-01-30
+        folder_path = os.path.dirname(os.path.dirname(instance.photo.path))
+        # Deletes the folder and the image
+        if os.path.exists(folder_path):
+            shutil.rmtree(folder_path)

@@ -3,6 +3,148 @@
   cms
 {% endblock %}
 {% block main_content %}
+{% comment %}  {% endcomment %}
+
+          <div class="row">
+            <!-- [Team] start -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card stretch stretch-full">
+                <div class="card-body">
+                  <div class="d-flex align-items-start justify-content-between mb-4">
+                    <div class="d-flex gap-4 align-items-center">
+                      <div class="avatar-text avatar-lg bg-gray-200">
+                        <i class="feather-dollar-sign"></i>
+                      </div>
+                      <div>
+                        <div class="fs-4 fw-bold text-dark">
+                          <span class="counter">{{projects.count}}</span>/<span class="counter">{{teams}}</span>
+                        </div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Team Work On Projects</h3>
+                      </div>
+                    </div>
+                    <a href="javascript:void(0);" class=""><i class="feather-more-vertical"></i></a>
+                  </div>
+                  <div class="pt-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Team Capacity</a>
+                      <div class="w-100 text-end">
+                        <span class="fs-12 text-dark">Works</span>
+                        <span class="fs-11 text-muted">({{team_percentage|floatformat:2}}%)</span>
+                      </div>
+                    </div>
+                    <div class="progress mt-2 ht-3">
+                      <div class="progress-bar bg-primary" role="progressbar" style="width: {{team_percentage}}%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- [Converted Leads] start -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card stretch stretch-full">
+                <div class="card-body">
+                  <div class="d-flex align-items-start justify-content-between mb-4">
+                    <div class="d-flex gap-4 align-items-center">
+                      <div class="avatar-text avatar-lg bg-gray-200">
+                        <i class="feather-cast"></i>
+                      </div>
+                      <div>
+                        <div class="fs-4 fw-bold text-dark">
+                          <span class="counter">{{task_in_progress}}</span>/<span class="counter">{{tasks_count}}</span>
+                        </div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Task on Progress</h3>
+                      </div>
+                    </div>
+                    <a href="javascript:void(0);" class=""><i class="feather-more-vertical"></i></a>
+                  </div>
+                  <div class="pt-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Task Completed</a>
+                      <div class="w-100 text-end">
+                        <span class="fs-12 text-dark">{{task_completed}} Completed</span>
+                        <span class="fs-11 text-muted">({{task_percentage}}%)</span>
+                      </div>
+                    </div>
+                    <div class="progress mt-2 ht-3">
+                      <div class="progress-bar bg-warning" role="progressbar" style="width: {{task_percentage}}%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- [Converted Leads] end -->
+            <!-- [Projects In Progress] start -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card stretch stretch-full">
+                <div class="card-body">
+                  <div class="d-flex align-items-start justify-content-between mb-4">
+                    <div class="d-flex gap-4 align-items-center">
+                      <div class="avatar-text avatar-lg bg-gray-200">
+                        <i class="feather-briefcase"></i>
+                      </div>
+                      <div>
+                        <div class="fs-4 fw-bold text-dark">
+                          <span class="counter"> {% if project_in_progress %}{{project_in_progress}}</span>/<span class="counter">{{projects.count}}{% else %}0{% endif %}</span>
+                        </div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Projects In Progress</h3>
+                      </div>
+                    </div>
+                    <a href="javascript:void(0);" class=""><i class="feather-more-vertical"></i></a>
+                  </div>
+                  <div class="pt-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Projects In Progress</a>
+                      <div class="w-100 text-end">
+                        <span class="fs-12 text-dark">{{projects_completed}} Completed</span>
+                        <span class="fs-11 text-muted">({{project_percentage|floatformat:2}}%)</span>
+                      </div>
+                    </div>
+                    <div class="progress mt-2 ht-3">
+                      <div class="progress-bar bg-success" role="progressbar" style="width: {{project_percentage}}%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- [Projects In Progress] end -->
+            <!-- [Conversion Rate] start -->
+            <div class="col-xxl-3 col-md-6">
+              <div class="card stretch stretch-full">
+                <div class="card-body">
+                  <div class="d-flex align-items-start justify-content-between mb-4">
+                    <div class="d-flex gap-4 align-items-center">
+                      <div class="avatar-text avatar-lg bg-gray-200">
+                        <i class="feather-activity"></i>
+                      </div>
+                      <div>
+                        <div class="fs-4 fw-bold text-dark">
+                          <span class="counter">46.59</span>%
+                        </div>
+                        <h3 class="fs-13 fw-semibold text-truncate-1-line">Conversion Rate</h3>
+                      </div>
+                    </div>
+                    <a href="javascript:void(0);" class=""><i class="feather-more-vertical"></i></a>
+                  </div>
+                  <div class="pt-4">
+                    <div class="d-flex align-items-center justify-content-between">
+                      <a href="javascript:void(0);" class="fs-12 fw-medium text-muted text-truncate-1-line">Conversion Rate</a>
+                      <div class="w-100 text-end">
+                        <span class="fs-12 text-dark">$2,254</span>
+                        <span class="fs-11 text-muted">(46%)</span>
+                      </div>
+                    </div>
+                    <div class="progress mt-2 ht-3">
+                      <div class="progress-bar bg-danger" role="progressbar" style="width: 46%"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <!-- [Conversion Rate] end -->
+          </div>
+
+
+{% comment %}  {% endcomment %}
   <div class="row my-2">
     <div class="col-md-8">
       <h5>Projects</h5>
@@ -11,7 +153,7 @@
           <thead>
             <th>Order</th>
             <th>Name</th>
-            <th>Start Date</th>
+            <th>Team</th>
             <th>Due Date</th>
             <th>Status</th>
             <th>Priority</th>
@@ -21,7 +163,7 @@
               <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ pro.name }}</td>
-                <td>{{ pro.start_date }}</td>
+                <td>{{ pro.team.name}}</td>
                 <td>{{ pro.get_due_date }} Days Remain</td>
                 <td>{{ pro.status }}</td>
                 <td class="text-{{ pro.get_priority_color }}">{{ pro.priority }}</td>
@@ -53,17 +195,7 @@
                 </div>
               </div>
               <div class="progress mt-2 ht-5">
-                <div class="progress-bar bg-{% if pro.progress == 100 %}
-                    
-                    success
-
-                  {% else %}
-                    
-                    primary
-
-                  {% endif %}"
-                  role="progressbar"
-                  style="width: {{ pro.progress }}%"></div>
+                <div class="progress-bar bg-{% if pro.progress == 100 %}success{% else %}primary{% endif %}"role="progressbar" style="width: {{ pro.progress }}%"></div>
               </div>
               <br />
             {% endfor %}
@@ -81,7 +213,7 @@
           <thead>
             <th>Order</th>
             <th>Name</th>
-            <th>Start Date</th>
+            <th>Team</th>
             <th>Due Date</th>
             <th>Status</th>
             <th>Priority</th>
@@ -91,7 +223,7 @@
               <tr>
                 <td>{{ forloop.counter }}</td>
                 <td>{{ task.name }}</td>
-                <td>{{ task.start_date }}</td>
+                <td>{{ task.project.team.name }}</td>
                 <td>{{ task.get_due_date }} Days Remain</td>
                 <td>{{ task.status }}</td>
                 <td class="text-{{ task.get_priority_color }}">{{ task.priority }}</td>
@@ -123,17 +255,7 @@
                 </div>
               </div>
               <div class="progress mt-2 ht-5">
-                <div class="progress-bar bg-{% if task.progress == 100 %}
-                    
-                    success
-
-                  {% else %}
-                    
-                    primary
-
-                  {% endif %}"
-                  role="progressbar"
-                  style="width: {{ task.progress }}%"></div>
+                <div class="progress-bar bg-{% if task.progress == 100 %}success{% else %}primary{% endif %}"role="progressbar"style="width: {{ task.progress }}%"></div>
               </div>
               <br />
             {% endfor %}
@@ -177,7 +299,7 @@
           <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
             <div class="hstack gap-3">
               <div class="avatar-image">
-                <img src="{{notification.recipient.profile.get_profile_image}}" alt="photo" class="img-fluid" />
+                <img src="{{notification.actor.profile.get_profile_image}}" alt="photo" class="img-fluid" />
               </div>
               <div>
                 <a href="javascript:void(0);">{{notification.verb|title}}</a>

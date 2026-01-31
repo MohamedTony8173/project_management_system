@@ -4,8 +4,26 @@ import uuid
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 
+from teams.models import Team
+
 
 User = get_user_model()
+
+
+class ProjectQuery(models.QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
+    def upComing(self):
+        return self.filter(due_date__gte=timezone.now())
+
+
+class ProjectManager(models.Manager):
+    def get_queryset(self):
+        return ProjectQuery(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset().active().upComing()
 
 
 class Project(models.Model):
@@ -20,6 +38,7 @@ class Project(models.Model):
         ("High", "High"),
     )
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    team = models.ForeignKey(Team, verbose_name=_("team"), on_delete=models.CASCADE,related_name='projects')
     owner = models.ForeignKey(
         User, verbose_name=_("owner"), on_delete=models.CASCADE, related_name="projects"
     )
@@ -36,6 +55,7 @@ class Project(models.Model):
     due_date = models.DateField(_("due date"))
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     update_at = models.DateTimeField(_("update at"), auto_now=True)
+    objects = ProjectManager()
 
     def __str__(self):
         return self.name

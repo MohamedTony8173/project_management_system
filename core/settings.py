@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     "homeApp.apps.HomeappConfig",
     "tasks.apps.TasksConfig",
     "notifications.apps.NotificationsConfig",
+    "teams.apps.TeamsConfig",
 ]
 
 

@@ -8,6 +8,22 @@ from django.utils import timezone
 User = get_user_model()
 
 
+class TaskQuery(models.QuerySet):
+    def active(self):
+        return self.filter(active=True)
+
+    def upComing(self):
+        return self.filter(due_date__gte=timezone.now())
+
+
+class TaskManager(models.Manager):
+    def get_queryset(self):
+        return TaskQuery(self.model, using=self._db)
+
+    def all(self):
+        return self.get_queryset().active().upComing()
+
+
 class Task(models.Model):
     STATUS_CHOICE = (
         ("To Do", "To Do"),
@@ -42,6 +58,7 @@ class Task(models.Model):
     due_date = models.DateField(_("due date"))
     created_at = models.DateTimeField(_("created at"), auto_now_add=True)
     update_at = models.DateTimeField(_("update at"), auto_now=True)
+    objects = TaskManager()
 
     def __str__(self):
         return self.name
@@ -73,6 +90,3 @@ class Task(models.Model):
             "Completed": 100,
         }
         return progress_dict.get(self.status, 0)
-    
-    
-
