@@ -37,8 +37,8 @@ class HomeIndex(View):
             team_percentage = 0
 
         context = {
-            "projects": Project.objects.all()[:5],
-            "tasks": Task.objects.all()[:5],
+            "projects": Project.objects.due_t_or_less()[:5],
+            "tasks": Project.objects.due_t_or_less()[:5],
             "profiles": Profile.objects.all()[:5],
             "project_in_progress": project_in_progress,
             "projects_completed": projects_completed,
@@ -51,7 +51,4 @@ class HomeIndex(View):
             'team_percentage':team_percentage
         }
 
-        if request.user.is_authenticated:
-            notifications = Notification.objects.get_user_notification(request.user)[:3]
-            context["notifications"] = notifications
         return render(request, "homeApp/index.html", context)

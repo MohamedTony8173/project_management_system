@@ -171,7 +171,7 @@
             {% endfor %}
           </tbody>
         </table>
-        <a href="" class="my-2 btn btn-outline-dark mb-3 ms-auto" style="width: 150px;">View All Project</a>
+        <a href="{% url "projects:pro_list" %}" class="my-2 btn btn-outline-dark mb-3 ms-auto" style="width: 150px;">View All Project</a>
       </div>
     </div>
     <div class="col-md-4">
@@ -295,6 +295,7 @@
       <h5>Notification ({{notifications.count}})</h5>
       <div class="card stretch stretch-full">
         <div class="card-body custom-card-action">
+          {% if notifications %}
           {% for notification in notifications %}
           <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
             <div class="hstack gap-3">
@@ -308,6 +309,7 @@
             </div>
           </div>
           {% endfor %}
+          {% endif %}
         </div>
         <a href="javascript:void(0);" class="card-footer fs-11 fw-bold text-uppercase text-center">Update 30 Min Ago</a>
       </div>

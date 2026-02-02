@@ -37,12 +37,20 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # third part
+    "crispy_forms",
+    "crispy_bootstrap5",
+    'django_celery_beat',
+    # local apps
     "accounts.apps.AccountsConfig",
     "projects.apps.ProjectsConfig",
     "homeApp.apps.HomeappConfig",
     "tasks.apps.TasksConfig",
     "notifications.apps.NotificationsConfig",
     "teams.apps.TeamsConfig",
+  
+    
+
 ]
 
 
@@ -54,6 +62,9 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    
+    # this middleware to take care of all endpoint should be protected by login
+    "django.contrib.auth.middleware.LoginRequiredMiddleware",
 ]
 
 ROOT_URLCONF = "core.urls"
@@ -68,6 +79,7 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "notifications.context_processors.notification_unread",
             ],
         },
     },
@@ -128,3 +140,24 @@ MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
 AUTH_USER_MODEL = "accounts.User"
+
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+
+
+
+
+# Celery Configuration Options
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0" 
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"   
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
+CELERY_RESULT_SERIALIZER = "json"
+CELERY_TIMEZONE = "UTC"
+# The key setting to use the Django database for beat scheduling
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

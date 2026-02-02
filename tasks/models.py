@@ -14,6 +14,8 @@ class TaskQuery(models.QuerySet):
 
     def upComing(self):
         return self.filter(due_date__gte=timezone.now())
+    
+
 
 
 class TaskManager(models.Manager):
@@ -22,6 +24,8 @@ class TaskManager(models.Manager):
 
     def all(self):
         return self.get_queryset().active().upComing()
+    
+
 
 
 class Task(models.Model):
