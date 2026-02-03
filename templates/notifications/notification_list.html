@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+  notifications
+{% endblock %}
+
+{% block dash_link %}
+  <a href="">Notifications</a>
+{% endblock %}
+{% block dash_active %}
+  Notifications/List
+{% endblock %}
+
+{% block main_content %}
+  <div class="row my-2">
+    <h5>Notifications ({{ notifications.count }})</h5>
+    {% if notifications %}
+      {% for notification in notifications %}
+        <div class="col-md-4">
+          <div class="card stretch stretch-full">
+            <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
+              <div class="hstack gap-3">
+                <div class="avatar-image">
+                  <img src="{{ notification.actor.profile.get_profile_image }}" alt="photo" class="img-fluid" />
+                </div>
+                <div>
+                  <a href="javascript:void(0);">{{ notification.verb|title }}</a>
+                  <div class="fs-11 text-muted">{{ notification.date_created_format }}</div>
+                </div>
+              </div>
+            </div>
+            <div class="text-end me-3">
+              {% if notification.read %}
+                <small class="fs-11 text-success text-end ms-auto" data-bs-toggle="tooltip" title="It's Ok">
+                  <i class="feather-check"></i>
+                  <span>Read</span>
+                </small>
+              {% else %}
+              <form action="{% url "notifications:notification_mark" notification.id %}" method="post">
+                {% csrf_token %}
+                <button type="submit" class="fs-11 text-danger text-end ms-auto border-0 bg-transparent" data-bs-toggle="tooltip" title="Make as Read">
+                  <i class="feather-check"></i>
+                  <span>Make as Read</span>
+                </button>
+                </form>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    {% endif %}
+  </div>
+  {% comment %} pagination {% endcomment %}
+
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="row">
+    <div class="col-sm-12 col-md-5">
+      <div class="dataTables_info" id="projectList_info" role="status" aria-live="polite">Showing {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} entries</div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+      <div class="dataTables_paginate paging_simple_numbers" id="projectList_paginate">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="paginate_button page-item previous mx-1" id="projectList_previous">
+              <a href="?page={{ page_obj.previous_page_number }}" aria-controls="projectList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+            </li>
+          {% else %}
+            <li class="paginate_button page-item previous disabled mx-1" id="projectList_previous">
+              <a href="#" aria-controls="projectList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+            </li>
+          {% endif %}
+          <li class="paginate_button page-item active mx-1">
+            <a href="#" aria-controls="projectList" data-dt-idx="0" tabindex="0" class="page-link">{{ page_obj.number }}</a>
+          </li>
+
+          <li class="paginate_button page-item mx-1">
+            <a class="page-link">{{ page_obj.paginator.num_pages }}</a>
+          </li>
+          {% if page_obj.has_next %}
+            <li class="paginate_button page-item next mx-1" id="projectList_next">
+              <a href="?page={{ page_obj.next_page_number }}" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+            </li>
+          {% else %}
+            <li class="paginate_button page-item next disabled mx-1" id="projectList_next">
+              <a href="#" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}

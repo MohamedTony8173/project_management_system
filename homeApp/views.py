@@ -2,10 +2,10 @@ from django.shortcuts import render
 from django.views.generic import View
 
 from accounts.models import Profile
-from notifications.models import Notification
 from projects.models import Project
 from tasks.models import Task
 from teams.models import Team
+
 
 
 class HomeIndex(View):
@@ -38,8 +38,9 @@ class HomeIndex(View):
 
         context = {
             "projects": Project.objects.due_t_or_less()[:5],
-            "tasks": Project.objects.due_t_or_less()[:5],
-            "profiles": Profile.objects.all()[:5],
+            "projects_counts": Project.objects.all(),
+            "tasks": Task.objects.due_t_or_less()[:5],
+            "profiles": Profile.objects.all()[:4],
             "project_in_progress": project_in_progress,
             "projects_completed": projects_completed,
             "project_percentage": project_percentage,
@@ -52,3 +53,4 @@ class HomeIndex(View):
         }
 
         return render(request, "homeApp/index.html", context)
+

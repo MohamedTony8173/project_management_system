@@ -1,0 +1,110 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+  task/list
+{% endblock %}
+
+{% block dash_link %}
+  <a href="">Task</a>
+{% endblock %}
+{% block dash_active %}
+  All Tasks
+{% endblock %}
+
+{% block main_content %}
+  <div class="card stretch stretch-full">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <div id="taskList_wrapper" class="dataTables_wrapper dt-bootstrap5 no-footer">
+          <div class="row dt-row">
+            <div class="col-sm-12">
+              <table class="table table-hover dataTable no-footer" id="taskList" aria-describedby="taskList_info">
+                <thead>
+                  <tr>
+                    <th tabindex="0" aria-controls="taskList" rowspan="1" colspan="1">#</th>
+                    <th tabindex="0" aria-controls="taskList" rowspan="1" colspan="1">task Name</th>
+                    <th tabindex="0" aria-controls="taskList" rowspan="1" colspan="1">Team Work</th>
+                    <th tabindex="0" aria-controls="taskList" rowspan="1" colspan="1">Start Date</th>
+                    <th tabindex="0" aria-controls="taskList" rowspan="1" colspan="1">End Date</th>
+                    <th tabindex="0" aria-controls="taskList" rowspan="1" colspan="1">Priority</th>
+                    <th tabindex="0" aria-controls="taskList" rowspan="1" colspan="1">Status</th>
+                    <th rowspan="1" colspan="2" class="text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for task in tasks %}
+                    <tr class="single-item odd">
+                      <td>{{ forloop.counter }}</td>
+                      <td>{{ task.name|title }}</td>
+                      <td>
+                        <div class="d-flex">
+                          {% for pro in task.team.member.all %}
+                            <span class="avatar-image avatar-md me-1"><img src="{{ pro.profile.get_profile_image }}" alt="" class="img-fluid" /></span>
+                          {% endfor %}
+                        </div>
+                      </td>
+
+                      <td>{{ task.start_date }}</td>
+                      <td>{{ task.due_date }}</td>
+                      <td class="text-{{ task.get_priority_color }}" style="font-style: italic;">{{ task.priority }}</td>
+                      <td class="text-{{ task.get_status_color }}" style="font-style: italic;">
+                        <small>{{ task.status }}</small>
+                        <div class="progress mt-2 ht-5">
+                          <div class="progress-bar bg-{{task.get_progress_color}}"
+                            role="progressbar"
+                            style="width: {{ task.progress }}%"></div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="hstack gap-2 justify-content-end">
+                          <a href="tasks-view.html" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
+                          <a href="javascript:void(0)" class="avatar-text avatar-md"><i class="feather feather-trash-2"></i></a>
+                        </div>
+                      </td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-sm-12 col-md-5">
+              <div class="dataTables_info" id="taskList_info" role="status" aria-live="polite">Showing {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} entries</div>
+            </div>
+            <div class="col-sm-12 col-md-7">
+              <div class="dataTables_paginate paging_simple_numbers" id="taskList_paginate">
+                <ul class="pagination ">
+                  {% if page_obj.has_previous %}
+                    <li class="paginate_button page-item previous mx-1" id="taskList_previous">
+                      <a href="?page={{page_obj.previous_page_number}}" aria-controls="taskList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+                    </li>
+                  {% else %}
+                    <li class="paginate_button page-item previous disabled mx-1" id="taskList_previous">
+                      <a href="#" aria-controls="taskList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+                    </li>
+                  {% endif %}
+                  <li class="paginate_button page-item active mx-1">
+                    <a href="#" aria-controls="taskList" data-dt-idx="0" tabindex="0" class="page-link">{{ page_obj.number }}</a>
+                  </li>
+                  
+                  <li class="paginate_button page-item mx-1">
+                    <a class="page-link">{{ page_obj.paginator.num_pages }}</a>
+                  </li>
+                  {% if page_obj.has_next %}
+                  <li class="paginate_button page-item next mx-1" id="taskList_next">
+                    <a href="?page={{page_obj.next_page_number}}" aria-controls="taskList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+                  </li>
+                  {% else %}
+                  <li class="paginate_button page-item next disabled mx-1" id="taskList_next">
+                    <a href="#" aria-controls="taskList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+                  </li>
+                  {% endif %}
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

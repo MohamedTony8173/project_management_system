@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.shortcuts import redirect, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView
+from django.views.generic import CreateView, ListView,DetailView
 
 from notifications.task import create_notification
 from projects.forms import ProjectFormCreation
@@ -49,3 +49,9 @@ class ProjectNearDueListView(ListView):
     template_name = "projects/project_near_list.html"
     context_object_name = "projects"
     paginate_by = 6
+
+
+class ProjectDetailView(DetailView):
+    model = Project
+    template_name = "projects/project_detail.html"
+    context_object_name = "project"

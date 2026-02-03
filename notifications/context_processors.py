@@ -3,9 +3,15 @@ from .models import Notification
 def notification_unread(request):
     if request.user.is_authenticated:
         # TODO TOMORROW notification count
-        notifications = Notification.objects.unread_notification(request.user)[:5]
+        notifications_count = Notification.objects.unread_notification(request.user).count()
+        notifications_un = Notification.objects.unread_notification(request.user)[:4]
     else:
-        notifications = 0  
+        notifications_count = 0
     return {
-        'notifications':notifications
+        'notifications_un':notifications_un,
+        'notifications_count':notifications_count
     }
+    
+    
+
+        

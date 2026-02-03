@@ -15,7 +15,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "start_date",
         "due_date",
     )
-
+    search_fields = ['status']
     def save_model(self, request, obj, form, change):
         if not change:
             obj.owner = request.user

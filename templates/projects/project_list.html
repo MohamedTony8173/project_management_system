@@ -56,18 +56,12 @@
                       <td class="text-{{ project.get_status_color }}" style="font-style: italic;">
                         <small>{{ project.status }}</small>
                         <div class="progress mt-2 ht-5">
-                          <div class="progress-bar bg-{% if project.progress == 100 %}
-                              success
-                            {% else %}
-                              primary
-                            {% endif %}"
-                            role="progressbar"
-                            style="width: {{ project.progress }}%"></div>
+                          <div class="progress-bar bg-{{ project.get_status_color }}" role="progressbar" style="width: {{ project.progress }}%"></div>
                         </div>
                       </td>
                       <td>
                         <div class="hstack gap-2 justify-content-end">
-                          <a href="projects-view.html" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
+                          <a href="{{ project.get_absolute_url }}" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
                           <a href="javascript:void(0)" class="avatar-text avatar-md"><i class="feather feather-trash-2"></i></a>
                         </div>
                       </td>
@@ -77,16 +71,17 @@
               </table>
             </div>
           </div>
+
           <div class="row">
             <div class="col-sm-12 col-md-5">
               <div class="dataTables_info" id="projectList_info" role="status" aria-live="polite">Showing {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} entries</div>
             </div>
             <div class="col-sm-12 col-md-7">
               <div class="dataTables_paginate paging_simple_numbers" id="projectList_paginate">
-                <ul class="pagination ">
+                <ul class="pagination">
                   {% if page_obj.has_previous %}
                     <li class="paginate_button page-item previous mx-1" id="projectList_previous">
-                      <a href="?page={{page_obj.previous_page_number}}" aria-controls="projectList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+                      <a href="?page={{ page_obj.previous_page_number }}" aria-controls="projectList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
                     </li>
                   {% else %}
                     <li class="paginate_button page-item previous disabled mx-1" id="projectList_previous">
@@ -96,18 +91,18 @@
                   <li class="paginate_button page-item active mx-1">
                     <a href="#" aria-controls="projectList" data-dt-idx="0" tabindex="0" class="page-link">{{ page_obj.number }}</a>
                   </li>
-                  
+
                   <li class="paginate_button page-item mx-1">
                     <a class="page-link">{{ page_obj.paginator.num_pages }}</a>
                   </li>
                   {% if page_obj.has_next %}
-                  <li class="paginate_button page-item next mx-1" id="projectList_next">
-                    <a href="?page={{page_obj.next_page_number}}" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
-                  </li>
+                    <li class="paginate_button page-item next mx-1" id="projectList_next">
+                      <a href="?page={{ page_obj.next_page_number }}" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+                    </li>
                   {% else %}
-                  <li class="paginate_button page-item next disabled mx-1" id="projectList_next">
-                    <a href="#" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
-                  </li>
+                    <li class="paginate_button page-item next disabled mx-1" id="projectList_next">
+                      <a href="#" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+                    </li>
                   {% endif %}
                 </ul>
               </div>

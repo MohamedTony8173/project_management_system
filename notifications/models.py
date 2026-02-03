@@ -10,14 +10,13 @@ User = get_user_model()
 
 class NotificationManager(models.Manager):
     def get_user_notification(self, user):
-        return self.filter(recipient=user)
+        return self.filter(recipient=user).select_related("recipient")
 
     def unread_notification(self, user):
-        return self.get_user_notification(user).filter(read=False)
+        return self.filter(read=False, recipient=user).select_related("recipient")
 
     def read_notification(self, user):
-        return self.get_user_notification(user).filter(read=True)
-
+        return self.filter(read=True, recipient=user).select_related("recipient")
 
 
 class Notification(models.Model):
@@ -36,7 +35,7 @@ class Notification(models.Model):
     )
     object_id = models.CharField(max_length=255)
     content_object = GenericForeignKey("content_type", "object_id")
-    created_at = models.DateTimeField(_("created at "),auto_now_add=True)
+    created_at = models.DateTimeField(_("created at "), auto_now_add=True)
     read = models.BooleanField(_("read"), default=False)
     objects = NotificationManager()
 
@@ -48,5 +47,3 @@ class Notification(models.Model):
 
     def date_created_format(self):
         return self.created_at.strftime("%d %b %I-%M %p")
-    
-    

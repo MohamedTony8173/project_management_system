@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
     'django_celery_beat',
+    "phonenumber_field",
     # local apps
     "accounts.apps.AccountsConfig",
     "projects.apps.ProjectsConfig",

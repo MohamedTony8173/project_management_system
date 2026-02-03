@@ -173,6 +173,7 @@
                 </li>
               </ul>
             </li>
+            {% comment %} projects {% endcomment %}
             <li class="nxl-item nxl-hasmenu">
               <a href="javascript:void(0);" class="nxl-link">
                 <span class="nxl-micon"><i class="feather-briefcase"></i></span>
@@ -190,29 +191,25 @@
                 </li>
               </ul>
             </li>
+            {% comment %} tasks {% endcomment %}
             <li class="nxl-item nxl-hasmenu">
               <a href="javascript:void(0);" class="nxl-link">
-                <span class="nxl-micon"><i class="feather-layout"></i></span>
-                <span class="nxl-mtext">Widgets</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
+                <span class="nxl-micon"><i class="feather-briefcase"></i></span>
+                <span class="nxl-mtext">Tasks</span><span class="nxl-arrow"><i class="feather-chevron-right"></i></span>
               </a>
               <ul class="nxl-submenu">
                 <li class="nxl-item">
-                  <a class="nxl-link" href="widgets-lists.html">Lists</a>
+                  <a class="nxl-link" href="{% url "tasks:task_list" %}">Tasks</a>
                 </li>
                 <li class="nxl-item">
-                  <a class="nxl-link" href="widgets-tables.html">Tables</a>
+                  <a class="nxl-link" href="{% url "tasks:task_due_list" %}">Tasks Near Due</a>
                 </li>
                 <li class="nxl-item">
-                  <a class="nxl-link" href="widgets-charts.html">Charts</a>
-                </li>
-                <li class="nxl-item">
-                  <a class="nxl-link" href="widgets-statistics.html">Statistics</a>
-                </li>
-                <li class="nxl-item">
-                  <a class="nxl-link" href="widgets-miscellaneous.html">Miscellaneous</a>
+                  <a class="nxl-link" href="{% url "tasks:task_create" %}">Task Create</a>
                 </li>
               </ul>
             </li>
+            
             <li class="nxl-item nxl-hasmenu">
               <a href="javascript:void(0);" class="nxl-link">
                 <span class="nxl-micon"><i class="feather-settings"></i></span>
@@ -554,7 +551,7 @@
             <div class="dropdown nxl-h-item">
               <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
                 <i class="feather-bell"></i>
-                <span class="badge bg-danger nxl-h-badge">{% if notifications %}{{notifications.count}}{% else %}0{% endif %}</span>
+                <span class="badge bg-danger nxl-h-badge">{% if notifications_un %}{{notifications_count}}{% else %}0{% endif %}</span>
               </a>
               <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
                 <div class="d-flex justify-content-between align-items-center notifications-head">
@@ -564,25 +561,30 @@
                     <span>Make as Read</span>
                   </a>
                 </div>
-                {% if notifications %}
-                {% for notification in notifications  %}
+                {% if notifications_count %}
+                {% for notification in notifications_un  %}
                 <div class="notifications-item">
-                  <img src="{{notification.actor.profile.photo.url}}" alt="" class="rounded me-3 border" />
+                  <img src=" {{notification.actor.profile.photo.url}}" alt="" class="rounded me-3 border" />
                   <div class="notifications-desc">
                     <a href="javascript:void(0);" class="font-body text-truncate-2-line"><span class="fw-semibold text-dark">Hey {{notification.recipient}}: </span> {{notification.verb|title|truncatechars:20}}!</a>
                     <div class="d-flex justify-content-between align-items-center">
                       <div class="notifications-date text-muted border-bottom border-bottom-dashed">{{notification.created_at|timesince}} ago</div>
-                      <div class="d-flex align-items-center float-end gap-2">
-                        <a href="javascript:void(0);" class="d-block wd-8 ht-8 rounded-circle bg-gray-300" data-bs-toggle="tooltip" title="Make as Read"></a>
-                        <a href="javascript:void(0);" class="text-danger" data-bs-toggle="tooltip" title="Remove"><i class="feather-x fs-12"></i></a>
-                      </div>
+                    </div>
+                    <div class="d-flex align-items-center float-end gap-2">
+                          <form action="{% url "notifications:notification_mark" notification.id %}" method="post">
+                          {% csrf_token %}
+                          <button type="submit" class="fs-11 text-danger text-end ms-auto border-0 bg-transparent" data-bs-toggle="tooltip" title="Make as Read">
+                            <i class="feather-check"></i>
+                            <span>Make as Read</span>
+                          </button>
+                          </form>
                     </div>
                   </div>
                 </div>
                 {% endfor %}
                 {% endif %}
                 <div class="text-center notifications-footer">
-                  <a href="javascript:void(0);" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
+                  <a href="{% url "notifications:notification_list" %}" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
                 </div>
               </div>
             </div>

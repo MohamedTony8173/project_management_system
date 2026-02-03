@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+profile
+{% endblock %}
+
+{% block dash_link %} <a href="">Profile</a>{% endblock dash_link %}
+{% block dash_active %}Profile/List{% endblock dash_active %} 
+
+
+{% block main_content %}
+  <div class="row my-2">
+      <h5>Members ({{profiles.count}})</h5>
+    {% for profile in profiles %}
+    <div class="col-md-4">
+      <div class="card stretch stretch-full">
+        <div class="card-body custom-card-action">
+          <div class="hstack justify-content-between align-items-top border border-dashed rounded-3 p-3 mb-2">
+            <div class="hstack gap-3">
+              <div class="col-md-4 ">
+               <a href="">
+                <img src="{% if profile.photo %}{{profile.get_profile_image}} {% else %} {% static "assets/images/avatar/default_user.jpg" %} {% endif %}" alt="photo" class="img-fluid rounded-circle border"/>
+            </a>
+              </div>
+              <div class="col-md-8 ">
+                <a href="javascript:void(0);">{{profile.user.username|title}}</a>
+                <div class="fs-11 text-muted">{{profile.job_title|title}}</div>
+                <div class="fs-11 text-muted">{{profile.get_date_joined}}</div>
+                <div class="fs-11 text-muted">Phone:{{profile.phone}}</div>
+                <div class="fs-11 text-muted">Bio:{{profile.bio}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+   {% comment %} pagination {% endcomment %}
+
+  {% if page_obj.paginator.num_pages > 1 %}
+  <div class="row">
+    <div class="col-sm-12 col-md-5">
+      <div class="dataTables_info" id="projectList_info" role="status" aria-live="polite">Showing {{ page_obj.number }} of {{ page_obj.paginator.num_pages }} entries</div>
+    </div>
+    <div class="col-sm-12 col-md-7">
+      <div class="dataTables_paginate paging_simple_numbers" id="projectList_paginate">
+        <ul class="pagination">
+          {% if page_obj.has_previous %}
+            <li class="paginate_button page-item previous mx-1" id="projectList_previous">
+              <a href="?page={{ page_obj.previous_page_number }}" aria-controls="projectList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+            </li>
+          {% else %}
+            <li class="paginate_button page-item previous disabled mx-1" id="projectList_previous">
+              <a href="#" aria-controls="projectList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+            </li>
+          {% endif %}
+          <li class="paginate_button page-item active mx-1">
+            <a href="#" aria-controls="projectList" data-dt-idx="0" tabindex="0" class="page-link">{{ page_obj.number }}</a>
+          </li>
+
+          <li class="paginate_button page-item mx-1">
+            <a class="page-link">{{ page_obj.paginator.num_pages }}</a>
+          </li>
+          {% if page_obj.has_next %}
+            <li class="paginate_button page-item next mx-1" id="projectList_next">
+              <a href="?page={{ page_obj.next_page_number }}" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+            </li>
+          {% else %}
+            <li class="paginate_button page-item next disabled mx-1" id="projectList_next">
+              <a href="#" aria-controls="projectList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}
+
+
+

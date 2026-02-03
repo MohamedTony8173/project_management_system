@@ -11,6 +11,7 @@ import os
 from django.utils.timesince import timesince
 from django.utils import timezone
 import shutil
+from phonenumber_field.modelfields import PhoneNumberField
 
 
 class UserManager(BaseUserManager):
@@ -60,8 +61,9 @@ class Profile(models.Model):
     user = models.OneToOneField(
         User, verbose_name=_("user"), on_delete=models.CASCADE, related_name="profile"
     )
+    job_title = models.CharField(_("job title"), max_length=150, null=True, blank=True)
     photo = models.ImageField(_("photo"), upload_to=profile_image_location)
-    phone = models.CharField(_("phone"), max_length=16, null=True, blank=True)
+    phone = PhoneNumberField(_("phone"), null=True, blank=True, unique=True)
     address = models.CharField(_("address"), max_length=255, null=True, blank=True)
     update_at = models.DateTimeField(_("update"), auto_now=True)
     bio = models.CharField(_("bio"), max_length=255, null=True, blank=True)

@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 import uuid
 from django.utils import timezone
@@ -27,7 +28,7 @@ class ProjectManager(models.Manager):
     def get_queryset(self):
         return ProjectQuery(self.model, using=self._db)
 
-    def all(self):
+    def all_upcoming_active(self):
         return self.get_queryset().active().upComing()
     
     def due_t_or_less(self):
@@ -120,3 +121,7 @@ class Project(models.Model):
             "Completed": 100,
         }
         return progress_dict.get(self.status, 0)
+    
+    def get_absolute_url(self):
+        return reverse("projects:project_detail", kwargs={"pk": self.pk})
+    

@@ -5,6 +5,8 @@ from django.utils.translation import gettext_lazy as _
 import uuid
 from django.utils import timezone
 
+from teams.models import Team
+
 User = get_user_model()
 
 
@@ -15,6 +17,11 @@ class TaskQuery(models.QuerySet):
     def upComing(self):
         return self.filter(due_date__gte=timezone.now())
     
+    def due_in_tow_days_or_less(self):
+        today = timezone.now().date()
+        tow_todays = today + timezone.timedelta(days=2)
+        return self.active().upComing().filter(due_date__lte=tow_todays)
+    
 
 
 
@@ -22,8 +29,11 @@ class TaskManager(models.Manager):
     def get_queryset(self):
         return TaskQuery(self.model, using=self._db)
 
-    def all(self):
+    def all_upcoming(self):
         return self.get_queryset().active().upComing()
+    
+    def due_t_or_less(self):
+        return self.get_queryset().due_in_tow_days_or_less()
     
 
 
@@ -42,6 +52,9 @@ class Task(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     owner = models.ForeignKey(
         User, verbose_name=_("owner"), on_delete=models.CASCADE, related_name="tasks"
+    )
+    team = models.ForeignKey(
+        Team, verbose_name=_("team"), on_delete=models.CASCADE, related_name="tasks"
     )
     project = models.ForeignKey(
         Project,
@@ -84,6 +97,15 @@ class Task(models.Model):
             color = "warning"
         else:
             color = "danger"
+        return color
+    
+    def get_progress_color(self):
+        if self.status == "To Do":
+            color = "muted"
+        elif self.status == "In Progress":
+            color = "primary"
+        else:
+            color = "success"
         return color
 
     @property
