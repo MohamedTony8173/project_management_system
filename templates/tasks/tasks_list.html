@@ -50,14 +50,12 @@
                       <td class="text-{{ task.get_status_color }}" style="font-style: italic;">
                         <small>{{ task.status }}</small>
                         <div class="progress mt-2 ht-5">
-                          <div class="progress-bar bg-{{task.get_progress_color}}"
-                            role="progressbar"
-                            style="width: {{ task.progress }}%"></div>
+                          <div class="progress-bar bg-{{ task.get_progress_color }}" role="progressbar" style="width: {{ task.progress }}%"></div>
                         </div>
                       </td>
                       <td>
                         <div class="hstack gap-2 justify-content-end">
-                          <a href="tasks-view.html" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
+                          <a href="{{ task.get_absolute_url }}" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
                           <a href="javascript:void(0)" class="avatar-text avatar-md"><i class="feather feather-trash-2"></i></a>
                         </div>
                       </td>
@@ -73,10 +71,10 @@
             </div>
             <div class="col-sm-12 col-md-7">
               <div class="dataTables_paginate paging_simple_numbers" id="taskList_paginate">
-                <ul class="pagination ">
+                <ul class="pagination">
                   {% if page_obj.has_previous %}
                     <li class="paginate_button page-item previous mx-1" id="taskList_previous">
-                      <a href="?page={{page_obj.previous_page_number}}" aria-controls="taskList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
+                      <a href="?page={{ page_obj.previous_page_number }}" aria-controls="taskList" data-dt-idx="previous" tabindex="0" class="page-link">Previous</a>
                     </li>
                   {% else %}
                     <li class="paginate_button page-item previous disabled mx-1" id="taskList_previous">
@@ -86,18 +84,18 @@
                   <li class="paginate_button page-item active mx-1">
                     <a href="#" aria-controls="taskList" data-dt-idx="0" tabindex="0" class="page-link">{{ page_obj.number }}</a>
                   </li>
-                  
+
                   <li class="paginate_button page-item mx-1">
                     <a class="page-link">{{ page_obj.paginator.num_pages }}</a>
                   </li>
                   {% if page_obj.has_next %}
-                  <li class="paginate_button page-item next mx-1" id="taskList_next">
-                    <a href="?page={{page_obj.next_page_number}}" aria-controls="taskList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
-                  </li>
+                    <li class="paginate_button page-item next mx-1" id="taskList_next">
+                      <a href="?page={{ page_obj.next_page_number }}" aria-controls="taskList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+                    </li>
                   {% else %}
-                  <li class="paginate_button page-item next disabled mx-1" id="taskList_next">
-                    <a href="#" aria-controls="taskList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
-                  </li>
+                    <li class="paginate_button page-item next disabled mx-1" id="taskList_next">
+                      <a href="#" aria-controls="taskList" data-dt-idx="next" tabindex="0" class="page-link">Next</a>
+                    </li>
                   {% endif %}
                 </ul>
               </div>

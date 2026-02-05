@@ -23,8 +23,7 @@ from django.conf import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path("", include("homeApp.urls", namespace="homeApp")),
-    path("accounts/", include("accounts.urls", namespace="accounts")),
+    path("", include("accounts.urls", namespace="accounts")),
     path("projects/", include("projects.urls", namespace="projects")),
     path("tasks/", include("tasks.urls", namespace="tasks")),
     path("notifications/", include("notifications.urls", namespace="notifications")),

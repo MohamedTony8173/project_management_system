@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 import uuid
 from django.utils import timezone
-
+from django.urls import reverse
 from teams.models import Team
 
 User = get_user_model()
@@ -116,3 +116,7 @@ class Task(models.Model):
             "Completed": 100,
         }
         return progress_dict.get(self.status, 0)
+    
+    def get_absolute_url(self):
+        return reverse("tasks:task_detail", kwargs={"pk": self.pk})
+    

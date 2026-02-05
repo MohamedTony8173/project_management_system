@@ -40,18 +40,15 @@ INSTALLED_APPS = [
     # third part
     "crispy_forms",
     "crispy_bootstrap5",
-    'django_celery_beat',
+    "django_celery_beat",
     "phonenumber_field",
     # local apps
     "accounts.apps.AccountsConfig",
     "projects.apps.ProjectsConfig",
-    "homeApp.apps.HomeappConfig",
     "tasks.apps.TasksConfig",
     "notifications.apps.NotificationsConfig",
     "teams.apps.TeamsConfig",
-  
-    
-
+    "comments.apps.CommentsConfig",
 ]
 
 
@@ -63,7 +60,6 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    
     # this middleware to take care of all endpoint should be protected by login
     "django.contrib.auth.middleware.LoginRequiredMiddleware",
 ]
@@ -148,17 +144,32 @@ CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
 
 
-
-
-
 # Celery Configuration Options
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/0" 
-CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"   
+CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379/0"
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 CELERY_TIMEZONE = "UTC"
 # The key setting to use the Django database for beat scheduling
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+LOGIN_REDIRECT_URL = 'accounts:dashboard' 
+LOGIN_URL = 'accounts:login' 
+
+
+from django.contrib import messages
+
+MESSAGE_TAGS = {
+    messages.DEBUG: 'alert-info',
+    messages.INFO: 'alert-info',
+    messages.SUCCESS: 'alert-success',
+    messages.WARNING: 'alert-warning',
+    messages.ERROR: 'alert-danger',
+}
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

@@ -32,8 +32,7 @@ class MakeReadNotificationsView(View):
         )
         notification.read = True
         notification.save()
-        # return redirect('homeApp:home')
         return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
-#  return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/')
+

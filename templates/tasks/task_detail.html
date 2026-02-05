@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+  task/details
+{% endblock %}
+
+{% block dash_link %}
+  <a href="">Project</a>
+{% endblock %}
+{% block dash_active %}
+  task/Details/{{ project.name|title }}
+{% endblock %}
+
+{% block main_content %}
+  <div class="row">
+    <div class="col-md-6">
+      <div class="row">
+        <div class="row">
+          <h5>Comments {{ comments.count }}</h5>
+          {% for comment in page_obj %}
+            <div class="col-12">
+              <div class="card p-3 mb-2">
+                <div class="d-flex">
+                  <p class="avatar-image avatar-md me-1">
+                    <img src="{{ comment.user.profile.get_profile_image }}" alt="" class="img-fluid" />
+                  </p>
+                  <div class="d-flex flex-column">
+                    <p class="mb-0">{{ comment.user.username|title }}</p>
+                    <small class="">{{ comment.created_at|timesince }} ago</small>
+                  </div>
+                </div>
+                <p class="text-muted">{{ comment.comment_body }}</p>
+              </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if page_obj.paginator.num_pages > 1 %}
+        <div class="pagination">
+          <span class="step-links">
+            {% if page_obj.has_previous %}
+              <a href="?page={{ page_obj.previous_page_number }}">&laquo; previous</a>
+            {% endif %}
+
+            <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.</span>
+
+            {% if page_obj.has_next %}
+              <a href="?page={{ page_obj.next_page_number }}">next &raquo;</a>
+            {% endif %}
+          </span>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6 bg-white p-3 rounded-3">
+      <div class="p-3 border-0 bg-transparent">
+        <div class="d-flex flex-column align-items-start justify-content-between mb-2">
+          <h5 class="fs-14 fw-semibold text-dark">Task Name:</h5>
+          <p class="text-muted fs-16">{{ task.name|title }}</p>
+          <h5 class="fs-14 fw-semibold text-dark">Description:</h5>
+          <p>{{ task.description }}</p>
+          <h5 class="fs-14 fw-semibold text-dark">Task Leader:</h5>
+          <p class="text-muted fs-16">{{ task.team.team_leader|title }}</p>
+          <p class="text-dark fw-semibold fs-16 mb-0">Team Member:</p>
+          {% for pro in task.team.member.all %}
+            <span class="text-muted mx-2 fs-16"># {{ pro.username|title }}</span>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <h5>Add Comment:</h5>
+      <div class="col col-lg-6">
+        <div class="card p-4">
+          <form action="{% url 'tasks:task_detail' task.id %}" method="post">
+            {% csrf_token %}
+            {{ form_comment|crispy }}
+            <div class="my-3">
+              <input type="submit" value="Submit Comment" class="btn btn-outline-dark" />
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+
