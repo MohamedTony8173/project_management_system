@@ -1,0 +1,60 @@
+/* The Overlay: Darkens the background */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); /* Semi-transparent black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  transition: opacity 0.3s ease;
+}
+
+/* The Modal Box */
+.modal-content {
+  background: #fff;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  /* Animation for sliding in */
+  transform: translateY(-20px);
+  animation: slideIn 0.4s forwards;
+}
+
+/* Typography & Button */
+.modal-content h3 { margin-top: 0; color: #333; }
+.modal-content p { color: #666; line-height: 1.5; }
+
+
+
+
+/* Hide the modal initially */
+.modal-overlay {
+  display: none; /* Changed from flex */
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Class to show the modal */
+.modal-overlay.show {
+  display: flex;
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+
+   /* .footer{
+    position: fixed;
+     bottom: 0;
+     width: 100%;
+     text-align: center;
+
+
+    } */

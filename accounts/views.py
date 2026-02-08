@@ -159,4 +159,4 @@ class DashboardView(View):
             "team_percentage": team_percentage,
         }
 
-        return render(request, "homeApp/index.html", context)
+        return render(request, "accounts/dashboard.html", context)

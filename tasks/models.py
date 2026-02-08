@@ -40,6 +40,7 @@ class TaskManager(models.Manager):
 
 class Task(models.Model):
     STATUS_CHOICE = (
+        ("Backlog", "Backlog"),
         ("To Do", "To Do"),
         ("In Progress", "In Progress"),
         ("Completed", "Completed"),
@@ -65,7 +66,7 @@ class Task(models.Model):
     name = models.CharField(_("name"), max_length=255)
     description = models.TextField(_("description"), null=True, blank=True)
     status = models.CharField(
-        _("status"), max_length=20, choices=STATUS_CHOICE, default="To Do"
+        _("status"), max_length=20, choices=STATUS_CHOICE, default="Backlog"
     )
     priority = models.CharField(
         _("priority"), max_length=20, choices=PRIORITY_CHOICE, default="Low"

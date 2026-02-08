@@ -68,6 +68,11 @@
         </div>
       </div>
       <div class="row">
+        <div class="col-4">
+          <a href="{% url "projects:kanban_dashboard" project.pk %}" class="btn btn-dark px-3 mb-3">Kanban Board</a>
+        </div>
+      </div>
+      <div class="row">
         <h5>Comments {{ comments.count }}</h5>
         {% for comment in page_obj %}
           <div class="col-12">
@@ -115,27 +120,81 @@
           <p class="text-muted fs-16">{{ project.client_company|title }}</p>
           <h5 class="fs-14 fw-semibold text-dark">Project Leader:</h5>
           <p class="text-muted fs-16">{{ project.team.team_leader|title }}</p>
-          <p class="text-dark fw-semibold  fs-16 mb-0">Team Member:</p>
+          <p class="text-dark fw-semibold fs-16 mb-0">Team Member:</p>
           {% for pro in project.team.member.all %}
             <span class="text-muted mx-2 fs-16"># {{ pro.username|title }}</span>
           {% endfor %}
+          <p class="text-dark fw-semibold fs-16 mb-0 mt-3">AttachMent:</p>
+          {% for attach in project.attachments.all %}
+            <a class="text-muted fs-14 my-1" href="{{ attach.file_upload.url }}" target="_blank">#{{attach.name|title}} {{ attach.file_upload.url|cut:'media/'|truncatechars:25 }}</a>
+          {% endfor %}
+        </div>
+
+        <div class="d-flex">
+          <button onclick="openModal()" class="btn btn-dark">Add File</button>
         </div>
       </div>
     </div>
-
+    <div class="modal-overlay" id="modal">
+      <div class="modal-content">
+        <h3>Upload File</h3>
+        <p>Upload file for this {{project.name|title}}</p>
+        <form action="" method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+            {{form_attach|crispy}}
+            <div class="d-flex justify-content-between align-items-center">
+              <button type="submit" class="btn btn-primary px-3" name="attach_submit">Upload</button>
+              <a href="" class="close-btn btn btn-dark px-3" onclick="closeModal()">Close</a>
+            </div>
+        </form>
+      </div>
+    </div>
     <div class="row">
       <h5>Add Comment:</h5>
       <div class="col col-lg-6">
         <div class="card p-4">
-          <form action="{% url "projects:project_detail" project.id %}" method="post">
+          <form action="{% url 'projects:project_detail' project.id %}" method="post">
             {% csrf_token %}
-            {{form_comment|crispy}}
+            {{ form_comment|crispy }}
             <div class="my-3">
-              <input type="submit" value="Submit Comment" class="btn btn-outline-dark">
+              <input type="submit" value="Submit Comment" class="btn btn-outline-dark" name="comment_submit"/>
             </div>
           </form>
         </div>
       </div>
     </div>
   </div>
+{% endblock %}
+
+{% block script_tag %}
+  <script>
+    const modal = document.getElementById('modal')
+    
+    // Function to open the modal
+    function openModal() {
+      modal.classList.add('show')
+      // Prevent scrolling on the body while modal is open
+      document.body.style.overflow = 'hidden'
+    }
+    
+    // Function to close the modal
+    function closeModal() {
+      modal.classList.remove('show')
+      document.body.style.overflow = 'auto'
+    }
+    
+    // Close modal if user clicks on the dark overlay (outside the content)
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        closeModal()
+      }
+    }
+    
+    // Close modal when pressing the "Escape" key
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && modal.classList.contains('show')) {
+        closeModal()
+      }
+    })
+  </script>
 {% endblock %}

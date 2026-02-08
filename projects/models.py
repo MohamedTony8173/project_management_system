@@ -1,12 +1,16 @@
-from django.db import models
-from django.urls import reverse
-from django.utils.translation import gettext_lazy as _
+import os
+import shutil
 import uuid
-from django.utils import timezone
+
 from django.contrib.auth import get_user_model
+from django.db import models
+from django.db.models.signals import post_delete
+from django.dispatch import receiver
+from django.urls import reverse
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 
 from teams.models import Team
-
 
 User = get_user_model()
 
@@ -17,7 +21,7 @@ class ProjectQuery(models.QuerySet):
 
     def upComing(self):
         return self.filter(due_date__gte=timezone.now())
-    
+
     def due_in_tow_days_or_less(self):
         today = timezone.now().date()
         tow_todays = today + timezone.timedelta(days=2)
@@ -30,7 +34,7 @@ class ProjectManager(models.Manager):
 
     def all_upcoming_active(self):
         return self.get_queryset().active().upComing()
-    
+
     def due_t_or_less(self):
         return self.get_queryset().due_in_tow_days_or_less()
 
@@ -103,7 +107,7 @@ class Project(models.Model):
         else:
             color = "danger"
         return color
-    
+
     def get_status_color(self):
         if self.status == "To Do":
             color = "muted"
@@ -121,7 +125,50 @@ class Project(models.Model):
             "Completed": 100,
         }
         return progress_dict.get(self.status, 0)
-    
+
     def get_absolute_url(self):
         return reverse("projects:project_detail", kwargs={"pk": self.pk})
     
+    def get_kanban_url(self):
+        return reverse("projects:kanban_dashboard", kwargs={"pk": self.pk})
+
+
+def attach_file_location(instance, fileName):
+    date_upload = timezone.now().strftime("%Y-%m-%d")
+    return f"attach/{instance.project.name}/{ date_upload}/ {fileName}"
+
+
+class AttachMentFile(models.Model):
+    project = models.ForeignKey(
+        Project,
+        verbose_name=_("project"),
+        on_delete=models.CASCADE,
+        related_name="attachments",
+    )
+    user = models.ForeignKey(
+        User,
+        verbose_name=_("user"),
+        on_delete=models.CASCADE,
+        related_name="user_attachments",
+    )
+    name = models.CharField(_("name"), max_length=150)
+    file_upload = models.FileField(_("file name"), upload_to=attach_file_location)
+    uploaded_at = models.DateTimeField(_("upload at"), auto_now_add=True)
+
+    def __str__(self):
+        return self.name
+
+
+# this for delete also image if he was deleted
+@receiver(post_delete, sender=AttachMentFile)
+def delete_file_on_delete(sender, instance, **kwargs):
+    if instance.file_upload:
+        # if i remove just a path of file_upload
+        # if os.path.isfile(instance.file_upload.path):
+        #     os.remove(instance.file_upload.path)
+
+        # this for delete folder that has folder  hold photo path like /username/2026-01-30
+        folder_path = os.path.dirname(os.path.dirname(instance.file_upload.path))
+        # Deletes the folder and the image
+        if os.path.exists(folder_path):
+            shutil.rmtree(folder_path)

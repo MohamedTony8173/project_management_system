@@ -80,3 +80,40 @@ class TaskFormCreation(forms.ModelForm):
         )
 
 
+class TaskFormCreationModel(forms.ModelForm):
+
+    due_date = forms.DateField(
+        label="Due Date",
+        widget=forms.DateInput(attrs={"type": "date", "class": "form-control mb-3"}),
+        required=True,
+    )
+    description = forms.CharField(
+            label="Task description",
+            widget=forms.Textarea(
+                attrs={
+                    "class": "form-control mb-3",
+                    "placeholder": "Task description",
+                    "rows": 3,
+                }
+            ),
+            required=True,
+            )
+    name = forms.CharField(
+        label="Task Name",
+        widget=forms.TextInput(
+            attrs={"class": "form-control mb-3", "placeholder": "Task name"}
+        ),
+        required=True,
+    )
+
+        
+    
+    class Meta:
+        model = Task
+        fields = (
+            "name",
+            "description",
+            "due_date",
+        )
+
+    

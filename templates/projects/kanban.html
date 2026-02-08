@@ -1,0 +1,306 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}
+  project/kanban
+{% endblock %}
+
+{% block css %}
+  <link rel="stylesheet" type="text/css" href="{% static 'assets/css/ekko-lightbox.css' %} " />
+  <style>
+    .task-card {
+      cursor: grab;
+    }
+    .main-content {
+      margin: 10px !important;
+      padding: 10px !important;
+    }
+    .task-list {
+      min-height: 400px !important;
+      width: 100% !important;
+    }
+    
+    .row {
+      flex-wrap: wrap;
+    }
+    #message-container {
+      padding: 10px;
+      margin: 10px 0;
+      font-weight: bold;
+      text-align: center;
+    }
+    
+    #message-container.success {
+      color: green;
+    }
+    
+    #message-container.error {
+      color: red;
+    }
+  </style>
+{% endblock %}
+
+{% block dash_link %}
+  <a href="">Project</a>
+{% endblock %}
+{% block dash_active %}
+  Kanban/{{ project.name|title }}
+{% endblock %}
+
+{% block main_content %}
+  <h4 class="my-2">Create Task For Project <b class="text-primary">{{ project.name|title }}</b></h4>
+  <div class="my-4">
+    <button onclick="openModal()" class="btn btn-dark">Create Task <i class="feather-list fs-20 ms-5"></i></button>
+  </div>
+  <!-- model -->
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal-content">
+      <h3>Create Task</h3>
+      <p class="my-2">
+        Update Task For Project <b class="text-primary">{{ project.name|title }}</b>
+      </p>
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex justify-content-between align-items-center">
+          <button type="submit" class="btn btn-dark px-3" name="attach_submit">Submit</button>
+          <a href="" class="close-btn btn btn-outline-dark px-3" onclick="closeModal()">Close</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- model end -->
+  <div id="message-container"></div>
+
+  <!-- model update -->
+
+  <div class="modal-overlay" id="modal-update">
+    <div class="modal-content">
+      <h3>Create Task</h3>
+      <p class="my-2">
+        Create Task For Project <b class="text-primary">{{ project.name|title }}</b>
+      </p>
+      <form action="" method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <div class="d-flex justify-content-between align-items-center">
+          <button type="submit" class="btn btn-dark px-3" name="attach_submit">Submit</button>
+          <a href="" class="close-btn btn btn-outline-dark px-3" onclick="closeModal()">Close</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- model end -->
+
+  <div class="row ms-auto">
+    <div class="col-12 col-md-6 col-lg-3 bg-white p-0">
+      <div class="card-title bg-dark text-light p-3">Backlog</div>
+      <div class="row">
+        <div class="board-column p-3" id="backlog">
+          <div class="task-list">
+            {% for task in task_backlog %}
+              <div class="px-2 py-1 my-2 task-card d-flex justify-content-start align-items-center" data-task-id="{{ task.id }}" style="border: 2px dotted lightgrey;border-radius: 20px;">
+                <p class="m-0 my-1">{{ task.name }}</p>
+                {% if request.user == task.owner %}
+                  <div class="d-flex ms-auto">
+                    <a href="{% url 'projects:update_task' task.id %}" class="ms-auto"><i class="feather-edit fs-20 ms-auto"></i></a>
+                    <a href="" class="ms-auto"><i class="feather-trash fs-20 ms-auto text-danger"></i></a>
+                  </div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3 bg-white p-0 border-start border-3">
+      <div class="card-title bg-primary text-light p-3">To Do</div>
+      <div class="row">
+        <div class="board-column p-3" id="to-do">
+          <div class="task-list">
+            {% for task in task_to_do %}
+              <div class="px-2 py-1 my-2 task-card d-flex justify-content-start align-items-center" data-task-id="{{ task.id }}" style="border: 2px dotted lightblue;border-radius: 20px;">
+                <p class="m-0 my-1">{{ task.name }}</p><i class="feather-edit fs-20 ms-auto"></i>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3 bg-white p-0 border-start border-3">
+      <div class="card-title bg-info text-light p-3">In Progress</div>
+      <div class="row">
+        <div class="board-column p-3" id="in-progress">
+          <div class="task-list">
+            {% for task in task_progress %}
+              <div class="px-2 py-1 my-2 task-card d-flex justify-content-start align-items-center" data-task-id="{{ task.id }}" style="border: 2px dotted lightseagreen;border-radius: 20px;">
+                <p class="m-0 my-1">{{ task.name }}</p><i class="feather-edit fs-20 ms-auto"></i>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-md-6 col-lg-3 bg-white p-0 border-start border-3">
+      <div class="card-title bg-success text-light p-3">Completed</div>
+      <div class="row">
+        <div class="board-column p-3" id="completed">
+          <div class="task-list">
+            {% for task in task_completed %}
+              <div class="px-2 py-1 my-2 task-card d-flex justify-content-start align-items-center" data-task-id="{{ task.id }}" style="border: 2px dotted darkgreen;border-radius: 20px;">
+                <p class="m-0 my-1">{{ task.name }}</p><i class="feather-check fs-20 ms-auto"></i>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
+
+{% block script_tag %}
+  <script>
+    const MESSAGE_DURATION = 60 * 1000
+    
+    document.addEventListener('DOMContentLoaded', function () {
+      const taskCards = document.querySelectorAll('.task-card')
+      const columns = document.querySelectorAll('.board-column')
+    
+      taskCards.forEach((card) => {
+        card.draggable = true
+    
+        card.addEventListener('dragstart', (e) => {
+          // Ensure we are getting the ID from the card
+          e.dataTransfer.setData('text/plain', card.dataset.taskId)
+          // Optional: Make the card look semi-transparent while dragging
+          setTimeout(() => (card.style.opacity = '0.5'), 0)
+        })
+    
+        card.addEventListener('dragend', (e) => {
+          card.style.opacity = '1'
+        })
+      })
+    
+      columns.forEach((column) => {
+        // 1. Allow the drop by preventing default browser behavior
+        column.addEventListener('dragover', (e) => {
+          e.preventDefault()
+        })
+    
+        // 2. Handle the drop logic separately
+        column.addEventListener('drop', (e) => {
+          e.preventDefault()
+          const taskId = e.dataTransfer.getData('text/plain')
+          const taskCard = document.querySelector(`[data-task-id="${taskId}"]`)
+          const newStatus = column.id.replace('-', ' ')
+          if (taskCard) {
+            const taskList = column.querySelector('.task-list')
+            taskList.prepend(taskCard)
+          }
+    
+          if (column.id === 'backlog') {
+            taskCard.style.border = '2px dotted lightgrey'
+          } else if (column.id === 'to-do') {
+            taskCard.style.border = '2px dotted lightblue'
+          } else if (column.id === 'in-progress') {
+            taskCard.style.border = '2px dotted lightseagreen'
+          } else {
+            taskCard.style.border = '2px dotted darkgreen'
+          }
+    
+          updateTaskStatus(taskId, newStatus)
+        })
+      })
+    
+      let messageTimer // Variable to hold the timer ID
+    
+      function showMessage(text, type = 'success') {
+        const container = document.getElementById('message-container')
+    
+        // 1. Clear any existing timer so messages don't disappear early
+        clearTimeout(messageTimer)
+   
+        container.textContent = text
+        container.className = type
+        container.classList.add('show') // Assuming you use 'show' for transitions
+
+        // 2. Set the new timer for 1 minute (60,000ms)
+        messageTimer = setTimeout(() => {
+          container.textContent = ''
+          container.className = ''
+        }, 10000)
+      }
+    
+      function updateTaskStatus(taskId, newStatus) {
+        fetch(`/tasks/update_task_ajax/${taskId}/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': '{{ csrf_token }}'
+          },
+          body: JSON.stringify({ status: newStatus })
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data.success) {
+              showMessage('Task updated successfully!', 'success')
+    
+              // redirect if needed
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url
+              }
+            } else {
+              showMessage('Something went wrong', 'error')
+    
+              if (data.redirect_url) {
+                window.location.href = data.redirect_url
+              }
+            }
+          })
+          .catch((error) => {
+            console.error('Error:', error)
+            showMessage('Something went wrong', 'error')
+          })
+      }
+    })
+    
+    const modal = document.getElementById('modal')
+    // Function to open the modal
+    function openModal() {
+      modal.classList.add('show')
+      // Prevent scrolling on the body while modal is open
+      document.body.style.overflow = 'hidden'
+    }
+    
+    // Function to close the modal
+    function closeModal() {
+      modal.classList.remove('show')
+      document.body.style.overflow = 'auto'
+    }
+    
+    // Close modal if user clicks on the dark overlay (outside the content)
+    window.onclick = function (event) {
+      if (event.target === modal) {
+        closeModal()
+      }
+    }
+    
+    // Close modal when pressing the "Escape" key
+    document.addEventListener(
+      'keydown',
+      (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('show')) {
+          closeModal()
+        }
+      },
+      MESSAGE_DURATION
+    )
+  </script>
+{% endblock %}

@@ -1,7 +1,7 @@
 from django import forms
 
 from teams.models import Team
-from .models import Project
+from .models import Project,AttachMentFile
 
 
 class ProjectFormCreation(forms.ModelForm):
@@ -99,3 +99,10 @@ class ProjectFormCreation(forms.ModelForm):
         if self.cleaned_data.get("estimated_duration") < 0:
             raise forms.ValidationError("it should greater then zero")
         return self.cleaned_data["estimated_duration"]
+
+
+class AttachForm(forms.ModelForm):
+    name = forms.CharField(label='Prefix Name ',required=True)
+    class Meta:
+        model = AttachMentFile
+        fields = ['name','file_upload']
