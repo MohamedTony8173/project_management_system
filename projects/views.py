@@ -1,9 +1,9 @@
 from django.contrib import messages
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import CreateView, ListView, DetailView, UpdateView,DeleteView
 
-from notifications.task import create_notification,create_task_notification
+from notifications.task import create_notification, create_task_notification
 from projects.forms import ProjectFormCreation, AttachForm
 from projects.models import Project
 from comments.models import Comment
@@ -15,6 +15,8 @@ from tasks.forms import TaskFormCreationModel
 from tasks.models import Task
 
 from django.utils import timezone
+from django.http import Http404
+from django.db.models import Q
 
 
 class ProjectIndex(CreateView):
@@ -46,12 +48,18 @@ class ProjectListView(ListView):
     template_name = "projects/project_list.html"
     context_object_name = "projects"
     paginate_by = 6
+    
+    def get_queryset(self):
+      user = self.request.user 
+      projects = Project.objects.filter( Q(owner=user) | Q(team__member=user) ).distinct() 
+      return projects
+    
 
 
 class ProjectNearDueListView(ListView):
     def get_queryset(self):
-        super().get_queryset()
-        projects_near = Project.objects.due_t_or_less()
+        user = self.request.user 
+        projects_near = Project.objects.due_t_or_less().filter( Q(owner=user) | Q(team__member=user) ).distinct() 
         return projects_near
 
     model = Project
@@ -87,9 +95,7 @@ class ProjectDetailView(DetailView):
     def post(self, request, *args, **kwargs):
         project = self.get_object()
         if request.user not in project.team.member.all():
-            messages.error(
-                request, "You do not have access on this project."
-            )
+            messages.error(request, "You do not have access on this project.")
             return redirect("projects:project_detail", pk=project.id)
 
         form = CommentForm(request.POST)
@@ -132,23 +138,21 @@ class ProjectDetailView(DetailView):
         return redirect("projects:project_detail", pk=project.id)
 
 
-
 class KanbanView(DetailView):
     model = Project
     template_name = "projects/kanban.html"
     context_object_name = "project"
-    
-    
+
     def get_context_data(self, **kwargs):
         project = self.get_object()
         context = super().get_context_data(**kwargs)
-        context["task_backlog"] = project.tasks.filter(status='Backlog').upComing()
-        context["task_to_do"] = project.tasks.filter(status='To Do').upComing()
-        context["task_progress"] = project.tasks.filter(status='In Progress').upComing()
-        context["task_completed"] = project.tasks.filter(status='Completed').upComing()
+        context["task_backlog"] = project.tasks.filter(status="Backlog").upComing()
+        context["task_to_do"] = project.tasks.filter(status="To Do").upComing()
+        context["task_progress"] = project.tasks.filter(status="In Progress").upComing()
+        context["task_completed"] = project.tasks.filter(status="Completed").upComing()
         context["form"] = TaskFormCreationModel()
         return context
-    
+
     def post(self, request, *args, **kwargs):
         project = self.get_object()
         if request.user not in project.team.member.all():
@@ -170,8 +174,10 @@ class KanbanView(DetailView):
             verb = f"Task {task.name} was Assigned"
             obj_id = task.id
 
-            create_task_notification.delay(actor_name=actor, verb=verb, object_id=obj_id)
-            messages.success(request,'Task Created!')
+            create_task_notification.delay(
+                actor_name=actor, verb=verb, object_id=obj_id
+            )
+            messages.success(request, "Task Created!")
             return redirect("projects:kanban_dashboard", pk=project.id)
         else:
             for field, errors in form.errors.items():
@@ -179,23 +185,21 @@ class KanbanView(DetailView):
 
         return redirect("projects:kanban_dashboard", pk=project.id)
 
-    
-def update_task(request,pk):
-    task = get_object_or_404(Task,id=pk)
-    if request.method == 'POST':
-        if request.user not in task.team.member.all(): 
-            messages.error(
-                request, "You do not have an access on this project."
-            )
+
+def update_task(request, pk):
+    task = get_object_or_404(Task, id=pk)
+    if request.method == "POST":
+        if request.user not in task.team.member.all():
+            messages.error(request, "You do not have an access on this project.")
             return redirect("projects:project_detail", pk=task.project.id)
-        
+
         if task.owner == request.user.username:
             messages.error(
                 request, "You do not have an access on this project. you do not owner"
             )
             return redirect("projects:project_detail", pk=task.project.id)
-            
-        form = TaskFormCreationModel(request.POST,instance=task)
+
+        form = TaskFormCreationModel(request.POST, instance=task)
         if form.is_valid():
             form.save()
             # send notification
@@ -203,15 +207,60 @@ def update_task(request,pk):
             verb = f"Task {task.name} was Updated"
             obj_id = task.id
 
-            create_task_notification.delay(actor_name=actor, verb=verb, object_id=obj_id)
-            messages.success(request,'Task Updated!')
+            create_task_notification.delay(
+                actor_name=actor, verb=verb, object_id=obj_id
+            )
+            messages.success(request, "Task Updated!")
             return redirect("projects:kanban_dashboard", pk=task.project.id)
     else:
         form = TaskFormCreationModel(instance=task)
-    context = {
-        'form':form,
-        'task':task
-    }
-    return render(request,"tasks/update_task.html", context)
+    context = {"form": form, "task": task}
+    return render(request, "tasks/update_task.html", context)
 
 
+class ProjectUpdateView(UpdateView):
+    model = Project
+    template_name = "projects/project_update.html"
+    context_object_name = "project"
+    form_class = ProjectFormCreation
+
+    def get_object(self):
+        project = get_object_or_404(Project, pk=self.kwargs["pk"])
+        if project.owner != self.request.user:
+            raise Http404("not access")
+        return project
+
+    def form_invalid(self, form):
+        messages.error(self.request, "please correct the error")
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Updated Success")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("projects:project_detail", kwargs={'pk':self.object.pk})
+    
+    
+class ProjectDeleteView(DeleteView):
+    model = Project
+    template_name = "projects/project_delete.html"
+    context_object_name = "project"
+
+
+    def get_object(self):
+        project = get_object_or_404(Project, pk=self.kwargs["pk"])
+        if project.owner != self.request.user:
+            raise Http404("not access")
+        return project
+
+    def form_invalid(self, form):
+        messages.error(self.request, "please correct the error")
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Deleted Success")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("projects:pro_list")

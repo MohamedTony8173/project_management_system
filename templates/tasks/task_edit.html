@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+task/edit
+{% endblock %}
+
+{% block dash_link %} <a href="">Task</a>{% endblock dash_link %}
+
+
+{% block dash_active %}
+  Edit Task
+{% endblock %}
+
+{% block main_content %}
+  <form action="" method="post">
+    <div class="row g-1 g-md-2 g-lg-5">
+      {% csrf_token %}
+      <div class="col-md-6 me-3 bg-white rounded rounded-3 p-3 mb-5 me-1">
+        <div class="card-header">
+          <h5 class="">Edit Task</h5>
+          <hr />
+        </div>
+        <div class="mb-3">{{ form.project|as_crispy_field }}</div>
+        <div class="mb-3">{{ form.team|as_crispy_field }}</div>
+        <div class="mb-3">{{ form.name|as_crispy_field }}</div>
+        <div class="mb-3">{{ form.description|as_crispy_field }}</div>
+      </div>
+      <div class="col-md-5 bg-white rounded rounded-3 p-3 mb-5" >
+        <div class="mb-3">{{ form.status|as_crispy_field }}</div>
+        <div class="mb-3">{{ form.priority|as_crispy_field }}</div>
+        <div class="mb-3">{{ form.active|as_crispy_field }}</div>
+        <div class="mb-3">{{ form.start_date|as_crispy_field }}</div>
+        <div class="mb-3">{{ form.due_date|as_crispy_field }}</div>
+        <button type="submit" class="btn btn-outline-dark px-4 my-4 ms-auto">Edit Task</button>
+      </div>
+    </div>
+  </form>
+{% endblock %}

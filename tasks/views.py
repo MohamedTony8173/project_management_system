@@ -2,7 +2,13 @@ from django.contrib import messages
 from django.http import JsonResponse
 from django.shortcuts import redirect, get_object_or_404, render
 from django.urls import reverse, reverse_lazy
-from django.views.generic import CreateView, ListView, DetailView
+from django.views.generic import (
+    CreateView,
+    ListView,
+    DetailView,
+    DeleteView,
+    UpdateView,
+)
 
 from comments.forms import CommentForm
 from comments.models import Comment
@@ -13,6 +19,8 @@ from .forms import TaskFormCreation
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.views.decorators.http import require_POST
 import json
+from django.db.models import Q
+from django.http import Http404
 
 
 class TaskCreateIndex(CreateView):
@@ -47,11 +55,20 @@ class TaskListView(ListView):
     context_object_name = "tasks"
     paginate_by = 6
 
+    def get_queryset(self):
+        user = self.request.user
+        tasks = Task.objects.filter(Q(owner=user) | Q(team__member=user)).distinct()
+        return tasks
+
 
 class TaskNearDueListView(ListView):
     def get_queryset(self):
-        super().get_queryset()
-        tasks_near = Task.objects.due_t_or_less()
+        user = self.request.user
+        tasks_near = (
+            Task.objects.due_t_or_less()
+            .filter(Q(owner=user) | Q(team__member=user))
+            .distinct()
+        )
         return tasks_near
 
     model = Task
@@ -117,11 +134,15 @@ def update_task_ajax(request, task_id):
     task = get_object_or_404(Task, id=task_id)
 
     if request.user not in task.team.member.all():
-        return JsonResponse({
-            "success": False,
-            "redirect_url": reverse("projects:kanban_dashboard", args=[task.project.id]),
-            "error": "You do not have permission to update this task."
-        })
+        return JsonResponse(
+            {
+                "success": False,
+                "redirect_url": reverse(
+                    "projects:kanban_dashboard", args=[task.project.id]
+                ),
+                "error": "You do not have permission to update this task.",
+            }
+        )
 
     data = json.loads(request.body)
     new_status = data.get("status").title()
@@ -129,15 +150,70 @@ def update_task_ajax(request, task_id):
     if new_status in ["Backlog", "To Do", "In Progress", "Completed"]:
         task.status = new_status
         task.save()
-        return JsonResponse({
-            "success": True,
-            "message": "Updated Success",
-            "redirect_url": reverse("projects:kanban_dashboard", args=[task.project.id])
-        })
+        return JsonResponse(
+            {
+                "success": True,
+                "message": "Updated Success",
+                "redirect_url": reverse(
+                    "projects:kanban_dashboard", args=[task.project.id]
+                ),
+            }
+        )
     else:
-        return JsonResponse({
-            "success": False,
-            "error": "Invalid Status",
-            "redirect_url": reverse("projects:kanban_dashboard", args=[task.project.id])
-        }, status=400)
+        return JsonResponse(
+            {
+                "success": False,
+                "error": "Invalid Status",
+                "redirect_url": reverse(
+                    "projects:kanban_dashboard", args=[task.project.id]
+                ),
+            },
+            status=400,
+        )
 
+
+class TaskDeleteView(DeleteView):
+    model = Task
+    template_name = "tasks/task_delete.html"
+    context_object_name = "task"
+
+    def get_object(self, queryset=None):
+        task = get_object_or_404(Task, pk=self.kwargs["pk"])
+        if task.owner != self.request.user:
+            raise Http404("Not Access")
+        return task
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Invalid Input")
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Deleted Success")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("tasks:task_list")
+
+
+class TaskEditView(UpdateView):
+    model = Task
+    template_name = "tasks/task_edit.html"
+    context_object_name = "task"
+    form_class = TaskFormCreation
+
+    def get_object(self, queryset=None):
+        task = get_object_or_404(Task, pk=self.kwargs["pk"])
+        if task.owner != self.request.user:
+            raise Http404("Not Access")
+        return task
+
+    def form_invalid(self, form):
+        messages.error(self.request, "Invalid Input")
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        messages.success(self.request, "Updated Success")
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse_lazy("tasks:task_list")

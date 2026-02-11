@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %}
+task/delete
+{% endblock %}
+
+{% block dash_link %} <a href="">Task</a>{% endblock dash_link %}
+{% block dash_active %}Delete Task{% endblock dash_active %} 
+
+
+{% block main_content %}
+<form action="" method="post">
+  <div class="row g-1 g-md-2 g-lg-5">
+      {% csrf_token %}
+      <div class="col-md-6 me-3 bg-white rounded rounded-3 p-3 mb-5 me-1">
+        <div class="card-header">
+          <h5 class="">Delete Task</h5>
+          <hr />
+
+          Would You Like to Delete This - <b class="text-danger">{{task.name|title}}</b> - Task
+        </div>
+        <hr>
+        <div class="d-flex justify-content-between">
+            <button type="submit" class="btn btn-dark px-4 my-4">Delete Task</button>
+            <a href="{% url "tasks:task_list" %}" class="btn btn-outline-dark px-4 my-4 ">Cancel</a>
+        </div>
+    
+      </div>
+    </div>
+</form>
+{% endblock %}

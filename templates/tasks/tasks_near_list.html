@@ -12,6 +12,8 @@
 {% endblock %}
 
 {% block main_content %}
+<a href="{% url "tasks:task_create" %}" class="btn btn-dark px-4 my-3">Create Task <i class="feather feather-plus"></i></a>
+
   <div class="card stretch stretch-full">
     <div class="card-body p-0">
       <div class="table-responsive">tasks
@@ -57,8 +59,13 @@
                       </td>
                       <td>
                         <div class="hstack gap-2 justify-content-end">
-                          <a href="{{task.get_absolute_url}}" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
-                          <a href="javascript:void(0)" class="avatar-text avatar-md"><i class="feather feather-trash-2"></i></a>
+                          {% if request.user == task.owner %}
+                          <a href="{{ task.get_absolute_url }}" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
+                          <a href="{% url "tasks:task_edit" task.pk %}" class="avatar-text avatar-md"><i class="feather feather-edit"></i></a>
+                          <a href="{% url "tasks:task_delete" task.pk %}" class="avatar-text avatar-md"><i class="feather feather-trash-2"></i></a>
+                          {% else %}
+                          <a href="{{ task.get_absolute_url }}" class="avatar-text avatar-md"><i class="feather feather-eye"></i></a>
+                          {% endif %}
                         </div>
                       </td>
                     </tr>

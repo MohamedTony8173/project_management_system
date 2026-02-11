@@ -18,13 +18,13 @@ class TaskFormCreation(forms.ModelForm):
         required=True,
     )
     status = forms.ChoiceField(
-        choices=[("", "-------------")] + list(Project.STATUS_CHOICE),
+        choices=[("", "-------------")] + list(Task.STATUS_CHOICE),
         widget=forms.Select(attrs={"class": "form-select mb-3"}),
         label="Choose Status",
         required=True,
     )
     priority = forms.ChoiceField(
-        choices=[("", "-------------")] + list(Project.PRIORITY_CHOICE),
+        choices=[("", "-------------")] + list(Task.PRIORITY_CHOICE),
         widget=forms.Select(attrs={"class": "form-select mb-3"}),
         label="Choose Priority",
         required=True,
@@ -52,9 +52,9 @@ class TaskFormCreation(forms.ModelForm):
         label=" Active To Work ",
         widget=forms.CheckboxInput(attrs={"class": "form-check-input p-2 mb-3 me-1"}),
     )
-    start_date = forms.DateTimeField(
+    start_date = forms.DateField(
         label="Start Date",
-        widget=forms.DateTimeInput(
+        widget=forms.DateInput(
             attrs={"type": "date", "class": "form-control mb-3"}
         ),
         required=True,
@@ -113,6 +113,7 @@ class TaskFormCreationModel(forms.ModelForm):
         fields = (
             "name",
             "description",
+            "priority",
             "due_date",
         )
 

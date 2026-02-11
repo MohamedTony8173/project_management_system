@@ -55,9 +55,9 @@ class ProjectFormCreation(forms.ModelForm):
         label=" Active To Work ",
         widget=forms.CheckboxInput(attrs={"class": "form-check-input p-2 mb-3 me-1"}),
     )
-    start_date = forms.DateTimeField(
+    start_date = forms.DateField(
         label="Start Date",
-        widget=forms.DateTimeInput(
+        widget=forms.DateInput(
             attrs={"type": "date", "class": "form-control mb-3"}
         ),
         required=True,

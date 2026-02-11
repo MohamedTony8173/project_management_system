@@ -9,7 +9,7 @@ class ProjectAdmin(admin.ModelAdmin):
         "owner",
         "name",
         "client_company",
-        "description",
+        # "description",
         "status",
         "priority",
         "start_date",
