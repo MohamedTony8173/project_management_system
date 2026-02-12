@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block title %}
+profile
+{% endblock %}
+
+{% block dash_link %} <a href="">Profile</a>{% endblock dash_link %}
+{% block dash_active %}Profile/List{% endblock dash_active %} 
+
+
+{% block main_content %}
+  <div class="row my-2">
+    {% if request.user == profile.user %}
+      <h5>Dear: (<b class="text-primary">{{profile.user.username |title}}</b>) if you see this information not correct at all , please call ADMIN </h5>
+      {% else %}
+      <div class="row">
+        <div class="col-md-2">
+          <a href="{% url "accounts:profile_edit" profile.pk %}" class="btn btn-outline-dark my-2">Edit Profile</a>
+      </div>
+      </div>
+      {% endif %}
+    <div class="col-md-6 col-lg-4">
+      <div class="card stretch stretch-full">
+        <div class="card-body custom-card-action">
+          <div class="hstack justify-content-between align-items-top border border-dashed rounded-3 p-3 mb-2">
+            <div class="hstack gap-3 align-items-center">
+              <div class="col">
+               <a href="">
+                <img src="{% if profile.photo %}{{profile.get_profile_image}} {% else %} {% static "assets/images/avatar/default_user.jpg" %} {% endif %}" 
+                alt="photo" class="rounded-circle border" style="width: 100px; height: 100px;"/>
+            </a>
+              </div>
+              <div class="col-md-8 ">
+                <a href="javascript:void(0);">{{profile.user.username|title}}</a>
+                <div class="fs-11 text-muted">{{profile.job_title|title}}</div>
+                <div class="fs-11 text-muted">{{profile.get_date_joined}}</div>
+                <div class="fs-11 text-muted">Phone:{{profile.phone}}</div>
+                <div class="fs-11 text-muted">Bio:{% if profile.bio %}{{profile.bio}}{% else %}Not set any bio yet!{% endif %}</div>
+                <div class="fs-11 text-muted">Location:{% if profile.location %}{{profile.location}}{% else %}Not set any bio yet!{% endif %}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+   {% comment %} pagination {% endcomment %}
+
+  
+{% endblock %}
+
+
+

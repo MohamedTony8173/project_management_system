@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from django import forms
-
+from .models import Profile
 User = get_user_model()
 
 
@@ -15,3 +15,9 @@ class RegisterUserForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("email", "username") 
+        
+class ProfileForm(forms.ModelForm):
+    bio = forms.CharField(widget=forms.Textarea(attrs={'rows':3}), required=True)
+    class Meta:
+        model = Profile
+        fields = ( 'job_title', 'photo', 'phone', 'address', 'bio', 'location')     

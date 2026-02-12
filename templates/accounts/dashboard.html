@@ -176,6 +176,7 @@
     </div>
     <div class="col-md-4">
       <h5>Progress Of Project</h5>
+      {% if projects %}
       <div class="card stretch-full">
         <div class="p-3">
           <div class="w-100">
@@ -202,6 +203,15 @@
           </div>
         </div>
       </div>
+      {% else %}
+        <div class="card stretch-full">
+          <div class="p-3">
+            <div class="w-100">
+              <h5>There is No Progress O Project</h5>
+            </div>
+          </div>
+        </div>
+{% endif %}
     </div>
   </div>
   {% comment %}task here{% endcomment %}
@@ -236,6 +246,7 @@
     </div>
     <div class="col-md-4">
       <h5>Progress Of Tasks</h5>
+      {% if tasks %}
       <div class="card stretch-full">
         <div class="p-3">
           <div class="w-100">
@@ -262,12 +273,23 @@
           </div>
         </div>
       </div>
+      {% else %}
+            <div class="card stretch-full">
+        <div class="p-3">
+          <div class="w-100">
+            <h5>There is No Progress On Tasks</h5>
+          </div>
+        </div>
+            </div>
+{% endif %}
     </div>
   </div>
 
   {% comment %}profile user{% endcomment %}
   <div class="row my-2">
+
     {% comment %} member user  {% endcomment %}
+    {% if profiles.count > 1 %}
     <div class="col-md-4">
       <h5>Members ({{profiles.count}})</h5>
       <div class="card stretch stretch-full">
@@ -290,6 +312,40 @@
         <a href="{% url "accounts:profile_list" %}" class="card-footer fs-11 fw-bold text-uppercase text-center">View All Members</a>
       </div>
     </div>
+
+    {% else %}
+
+    <div class="col-md-4">
+      <h5>Members ({{profiles.user.username}})</h5>
+      <div class="card stretch stretch-full">
+        <div class="card-body custom-card-action">
+          <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
+            <div class="hstack gap-3">
+              <div class="avatar-image">
+                <img src="{{profiles.get_profile_image}}" alt="photo" class="img-fluid" />
+              </div>
+              <div>
+                <a href="javascript:void(0);">{{profiles.user.username|title}}</a>
+                <div class="fs-11 text-muted">Frontend Developer</div>
+                <div class="fs-11 text-muted">{{profiles.get_date_joined}}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a href="{{profiles.get_absolute_url}}" class="card-footer fs-11 fw-bold text-uppercase text-center">View Profile</a>
+      </div>
+    </div>
+    
+
+
+
+
+    {% endif %}
+
+
+
+
+
     {% comment %} notifications  {% endcomment %}
         <div class="col-md-4">
       <h5>Notification ({{notifications_count}})</h5>

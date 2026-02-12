@@ -1,21 +1,33 @@
-from django.contrib.auth.views import (PasswordResetCompleteView,
-                                       PasswordResetConfirmView,
-                                       PasswordResetDoneView,
-                                       PasswordResetView)
+from django.contrib.auth.views import (
+    PasswordResetCompleteView,
+    PasswordResetConfirmView,
+    PasswordResetDoneView,
+    PasswordResetView,
+)
 from django.urls import path, reverse_lazy
 
-from .views import (ProfileList,DashboardView, account_login, account_logout,
-                    email_activated, register)
+from .views import (
+    ProfileList,
+    DashboardView,
+    account_login,
+    account_logout,
+    UserDetailView,
+    email_activated,
+    register,
+    UserEditView
+)
 
 app_name = "accounts"
 
 
 urlpatterns = [
-    path('',DashboardView.as_view(),name='dashboard'),
+    path("", DashboardView.as_view(), name="dashboard"),
     path("register/", register, name="register"),
     path("activate/<uidb64>/<token>/", email_activated, name="activate"),
     path("login/", account_login, name="login"),
     path("profile/list/", ProfileList.as_view(), name="profile_list"),
+    path("profile/detail/<int:pk>/", UserDetailView.as_view(), name="profile_user"),
+    path("profile/edit/<int:pk>/", UserEditView.as_view(), name="profile_edit"),
     path("logout/", account_logout, name="logout"),
     # reset password
     path(

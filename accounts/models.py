@@ -12,6 +12,7 @@ from django.utils.timesince import timesince
 from django.utils import timezone
 import shutil
 from phonenumber_field.modelfields import PhoneNumberField
+from django.urls import reverse
 
 
 class UserManager(BaseUserManager):
@@ -87,6 +88,11 @@ class Profile(models.Model):
             return timesince(self.user.join_at) + " ago"
         else:
             return self.user.join_at.strftime("%d %b")
+        
+        
+    def get_absolute_url(self):
+        return reverse("accounts:profile_user", kwargs={"pk": self.pk})
+        
 
 
 # Signals
