@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 {% load static %}
+
+{% load i18n %}
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -10,17 +12,20 @@
     <meta name="author" content="flexilecode" />
 
     <link rel="shortcut icon" type="image/x-icon" href="{% static 'assets/images/favicon.ico' %} " />
-    
+
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/bootstrap.min.css' %} " />
-    
+
     <link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/vendors.min.css' %} " />
     <link rel="stylesheet" type="text/css" href="{% static 'assets/vendors/css/daterangepicker.min.css' %} " />
-    
+
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/theme.min.css' %} " />
     <link rel="stylesheet" type="text/css" href="{% static 'assets/css/main.css' %} " />
-    {% block css %}{% endblock css %}
+    {% block css %}
+
+    {% endblock %}
     <title>
       {% block title %}
+
       {% endblock %}
     </title>
   </head>
@@ -32,10 +37,10 @@
     <nav class="nxl-navigation">
       <div class="navbar-wrapper">
         <div class="m-header">
-          <a href="{% url "accounts:dashboard" %}" class="b-brand">
+          <a href="{% url 'accounts:dashboard' %}" class="b-brand">
             <!-- ======== change your logo hear ============ -->
-            <img src="{% static "assets/images/logo-full.png" %} " alt="img" class="logo logo-lg" />
-            <img src="{% static "assets/images/logo-abbr.png" %} " alt="img" class="logo logo-sm" />
+            <img src="{% static 'assets/images/logo-full.png' %} " alt="img" class="logo logo-lg" />
+            <img src="{% static 'assets/images/logo-abbr.png' %} " alt="img" class="logo logo-sm" />
           </a>
         </div>
         <div class="navbar-content">
@@ -50,16 +55,14 @@
               </a>
               <ul class="nxl-submenu">
                 <li class="nxl-item">
-                  <a href="{% url "accounts:dashboard" %}" class="nxl-link" href="index.html">CRM</a>
+                  <a href="{% url 'accounts:dashboard' %}" class="nxl-link" href="index.html">CRM</a>
                 </li>
                 <li class="nxl-item">
                   <a class="nxl-link" href="analytics.html">Analytics</a>
                 </li>
               </ul>
             </li>
-            
-            
-            
+
             <li class="nxl-item nxl-hasmenu">
               <a href="javascript:void(0);" class="nxl-link">
                 <span class="nxl-micon"><i class="feather-users"></i></span>
@@ -96,7 +99,7 @@
               </ul>
             </li>
 
-            {% comment %} projects {% endcomment %}
+            {% comment %}projects{% endcomment %}
             <li class="nxl-item nxl-hasmenu">
               <a href="javascript:void(0);" class="nxl-link">
                 <span class="nxl-micon"><i class="feather-briefcase"></i></span>
@@ -104,17 +107,17 @@
               </a>
               <ul class="nxl-submenu">
                 <li class="nxl-item">
-                  <a class="nxl-link" href="{% url "projects:pro_list" %}">Projects</a>
+                  <a class="nxl-link" href="{% url 'projects:pro_list' %}">Projects</a>
                 </li>
                 <li class="nxl-item">
-                  <a class="nxl-link" href="{% url "projects:pro_due_list" %}">Projects Near Due</a>
+                  <a class="nxl-link" href="{% url 'projects:pro_due_list' %}">Projects Near Due</a>
                 </li>
                 <li class="nxl-item">
-                  <a class="nxl-link" href="{% url "projects:pro_index" %}">Projects Create</a>
+                  <a class="nxl-link" href="{% url 'projects:pro_index' %}">Projects Create</a>
                 </li>
               </ul>
             </li>
-            {% comment %} tasks {% endcomment %}
+            {% comment %}tasks{% endcomment %}
             <li class="nxl-item nxl-hasmenu">
               <a href="javascript:void(0);" class="nxl-link">
                 <span class="nxl-micon"><i class="feather-briefcase"></i></span>
@@ -122,18 +125,16 @@
               </a>
               <ul class="nxl-submenu">
                 <li class="nxl-item">
-                  <a class="nxl-link" href="{% url "tasks:task_list" %}">Tasks</a>
+                  <a class="nxl-link" href="{% url 'tasks:task_list' %}">Tasks</a>
                 </li>
                 <li class="nxl-item">
-                  <a class="nxl-link" href="{% url "tasks:task_due_list" %}">Tasks Near Due</a>
+                  <a class="nxl-link" href="{% url 'tasks:task_due_list' %}">Tasks Near Due</a>
                 </li>
                 <li class="nxl-item">
-                  <a class="nxl-link" href="{% url "tasks:task_create" %}">Task Create</a>
+                  <a class="nxl-link" href="{% url 'tasks:task_create' %}">Task Create</a>
                 </li>
               </ul>
             </li>
-
-   
           </ul>
         </div>
       </div>
@@ -201,7 +202,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-4">
                       <div class="d-flex align-items-center gap-3">
                         <div class="avatar-image bg-gray-200 rounded">
-                          <img src="{% static "assets/images/file-icons/css.png" %} " alt="" class="img-fluid" />
+                          <img src="{% static 'assets/images/file-icons/css.png' %} " alt="" class="img-fluid" />
                         </div>
                         <div>
                           <a href="javascript:void(0);" class="font-body fw-bold d-block mb-1">Project Style CSS</a>
@@ -213,7 +214,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-4">
                       <div class="d-flex align-items-center gap-3">
                         <div class="avatar-image bg-gray-200 rounded">
-                          <img src="{% static "assets/images/file-icons/zip.png" %} " alt="" class="img-fluid" />
+                          <img src="{% static 'assets/images/file-icons/zip.png' %} " alt="" class="img-fluid" />
                         </div>
                         <div>
                           <a href="javascript:void(0);" class="font-body fw-bold d-block mb-1">Dashboard Project Zip</a>
@@ -225,7 +226,7 @@
                     <div class="d-flex align-items-center justify-content-between mb-0">
                       <div class="d-flex align-items-center gap-3">
                         <div class="avatar-image bg-gray-200 rounded">
-                          <img src="{% static "assets/images/file-icons/pdf.png" %} " alt="" class="img-fluid" />
+                          <img src="{% static 'assets/images/file-icons/pdf.png' %} " alt="" class="img-fluid" />
                         </div>
                         <div>
                           <a href="javascript:void(0);" class="font-body fw-bold d-block mb-1">Project Document PDF</a>
@@ -240,47 +241,43 @@
                 </div>
               </div>
             </div>
-            <div class="dropdown nxl-h-item nxl-header-language d-none d-sm-flex">
-              <a href="javascript:void(0);" class="nxl-head-link me-0 nxl-language-link" data-bs-toggle="dropdown" data-bs-auto-close="outside"><img src="{% static 'assets/vendors/img/flags/4x3/us.svg' %} " alt="" class="img-fluid wd-20" /></a>
-              <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-language-dropdown">
-                <div class="dropdown-divider mt-0"></div>
-                <div class="language-items-wrapper">
-                  <div class="select-language px-4 py-2 hstack justify-content-between gap-4">
-                    <div class="lh-lg">
-                      <h6 class="mb-0">Select Language</h6>
-                      <p class="fs-11 text-muted mb-0">12 languages avaiable!</p>
-                    </div>
+
+
+
+            
+                  <div class="d-flex">
+                    <form action="{% url 'set_language' %}" method="post" class="d-flex">
+                      {% csrf_token %}
+                      <input name="next" type="hidden" value="{{ redirect_to }}">
+                      <select name="language" class="form-select px-5">
+                          {% get_current_language as LANGUAGE_CODE %}
+                          {% get_available_languages as LANGUAGES %}
+                          {% get_language_info_list for LANGUAGES as languages %}
+
+                          {% for language in languages %}
+                              <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+                                  {{ language.name_local }} ({{ language.code }})
+                              </option>
+                          {% endfor %}
+                      </select>
+                      <button type="submit" class="btn btn-sm btn-dark">lang</button>
+                  </form>
                   </div>
-                  <div class="dropdown-divider"></div>
-                  <div class="row px-4 pt-3">
-                    <div class="col-sm-4 col-6 language_select">
-                      <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                        <div class="avatar-image avatar-sm">
-                          <img src="{% static "assets/vendors/img/flags/1x1/sa.svg" %} " alt="" class="img-fluid" />
-                        </div>
-                        <span>Arabic</span>
-                      </a>
-                    </div>
-                    <div class="col-sm-4 col-6 language_select">
-                      <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                        <div class="avatar-image avatar-sm">
-                          <img src="{% static "assets/vendors/img/flags/1x1/bd.svg" %} " alt="" class="img-fluid" />
-                        </div>
-                        <span>Bengali</span>
-                      </a>
-                    </div>
-                    <div class="col-sm-4 col-6 language_select">
-                      <a href="javascript:void(0);" class="d-flex align-items-center gap-2">
-                        <div class="avatar-image avatar-sm">
-                          <img src="{% static "assets/vendors/img/flags/1x1/ch.svg" %} " alt="" class="img-fluid" />
-                        </div>
-                        <span>Chinese</span>
-                      </a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+
+         
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="nxl-h-item d-none d-sm-flex">
               <div class="full-screen-switcher">
                 <a href="javascript:void(0);" class="nxl-head-link me-0" onclick="$('body').fullScreenHelper('toggle');">
@@ -319,7 +316,13 @@
             <div class="dropdown nxl-h-item">
               <a class="nxl-head-link me-3" data-bs-toggle="dropdown" href="#" role="button" data-bs-auto-close="outside">
                 <i class="feather-bell"></i>
-                <span class="badge bg-danger nxl-h-badge">{% if notifications_un %}{{notifications_count}}{% else %}0{% endif %}</span>
+                <span class="badge bg-danger nxl-h-badge">
+                  {% if notifications_un %}
+                    {{ notifications_count }}
+                  {% else %}
+                    0
+                  {% endif %}
+                </span>
               </a>
               <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-notifications-menu">
                 <div class="d-flex justify-content-between align-items-center notifications-head">
@@ -330,80 +333,80 @@
                   </a>
                 </div>
                 {% if notifications_count %}
-                {% for notification in notifications_un  %}
-                <div class="notifications-item">
-                  <img src=" {{notification.actor.profile.photo.url}}" alt="" class="rounded me-3 border" />
-                  <div class="notifications-desc">
-                    <a href="javascript:void(0);" class="font-body text-truncate-2-line"><span class="fw-semibold text-dark">Hey {{notification.recipient}}: </span> {{notification.verb|title|truncatechars:20}}!</a>
-                    <div class="d-flex justify-content-between align-items-center">
-                      <div class="notifications-date text-muted border-bottom border-bottom-dashed">{{notification.created_at|timesince}} ago</div>
-                    </div>
-                    <div class="d-flex align-items-center float-end gap-2">
-                          <form action="{% url "notifications:notification_mark" notification.id %}" method="post">
-                          {% csrf_token %}
-                          <button type="submit" class="fs-11 text-danger text-end ms-auto border-0 bg-transparent" data-bs-toggle="tooltip" title="Make as Read">
-                            <i class="feather-check"></i>
-                            <span>Make as Read</span>
-                          </button>
+                  {% for notification in notifications_un %}
+                    <div class="notifications-item">
+                      <img src=" {{ notification.actor.profile.photo.url }}" alt="" class="rounded me-3 border" />
+                      <div class="notifications-desc">
+                        <a href="javascript:void(0);" class="font-body text-truncate-2-line"><span class="fw-semibold text-dark">Hey {{ notification.recipient }}:</span> {{ notification.verb|title|truncatechars:20 }}!</a>
+                        <div class="d-flex justify-content-between align-items-center">
+                          <div class="notifications-date text-muted border-bottom border-bottom-dashed">{{ notification.created_at|timesince }} ago</div>
+                        </div>
+                        <div class="d-flex align-items-center float-end gap-2">
+                          <form action="{% url 'notifications:notification_mark' notification.id %}" method="post">
+                            {% csrf_token %}
+                            <button type="submit" class="fs-11 text-danger text-end ms-auto border-0 bg-transparent" data-bs-toggle="tooltip" title="Make as Read">
+                              <i class="feather-check"></i>
+                              <span>Make as Read</span>
+                            </button>
                           </form>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div>
-                {% endfor %}
+                  {% endfor %}
                 {% endif %}
                 <div class="text-center notifications-footer">
-                  <a href="{% url "notifications:notification_list" %}" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
+                  <a href="{% url 'notifications:notification_list' %}" class="fs-13 fw-semibold text-dark">Alls Notifications</a>
                 </div>
               </div>
             </div>
             {% if request.user.is_authenticated %}
-            <div class="dropdown nxl-h-item">
-              <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside"><img src="{{request.user.profile.get_profile_image}} " alt="user-image" class="img-fluid user-avtar me-0" /></a>
-              <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
-                <div class="dropdown-header">
-                  <div class="d-flex align-items-center">
-                    <img src="{{request.user.profile.get_profile_image}}"  alt="user-image" class="img-fluid user-avtar" />
-                    <div>
-                      <h6 class="text-dark mb-0">{{request.user.username}}</h6>
-                      <span class="fs-12 fw-medium text-muted">{{request.user.email}}</span>
+              <div class="dropdown nxl-h-item">
+                <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside"><img src="{{ request.user.profile.get_profile_image }} " alt="user-image" class="img-fluid user-avtar me-0" /></a>
+                <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
+                  <div class="dropdown-header">
+                    <div class="d-flex align-items-center">
+                      <img src="{{ request.user.profile.get_profile_image }}" alt="user-image" class="img-fluid user-avtar" />
+                      <div>
+                        <h6 class="text-dark mb-0">{{ request.user.username }}</h6>
+                        <span class="fs-12 fw-medium text-muted">{{ request.user.email }}</span>
+                      </div>
                     </div>
                   </div>
+                  <a href="{% url 'accounts:profile_user' request.user.pk %}" class="dropdown-item">
+                    <i class="feather-user"></i>
+                    <span>Profile Details</span>
+                  </a>
+
+                  <a href="{% url 'notifications:notification_list' %}" class="dropdown-item">
+                    <i class="feather-bell"></i>
+                    <span>
+                      Notifications{% if notifications_un %}
+                        <span class="badge bg-soft-danger text-danger ms-1 rounded-circle">{{ notifications_un.count }}{% else %}0</span>
+                      {% endif %}
+                    </span>
+                  </a>
+                  <div class="dropdown-divider"></div>
+                  <a href="{% url 'accounts:logout' %}" class="dropdown-item">
+                    <i class="feather-log-out"></i>
+                    <span>Logout</span>
+                  </a>
                 </div>
-                <a href="{% url "accounts:profile_user" request.user.pk %}" class="dropdown-item">
-                  <i class="feather-user"></i>
-                  <span>Profile Details</span>
-                </a>
-                
-                <a href="{% url "notifications:notification_list" %}" class="dropdown-item">
-                  <i class="feather-bell"></i>
-                  <span>Notifications {% if notifications_un %} <span class="badge bg-soft-danger text-danger ms-1 rounded-circle">{{notifications_un.count}}{% else %}0</span> {% endif %}</span>
-                </a>
-                <div class="dropdown-divider"></div>
-                <a href="{% url "accounts:logout" %}" class="dropdown-item">
-                  <i class="feather-log-out"></i>
-                  <span>Logout</span>
-                </a>
               </div>
-            </div>
             {% else %}
               <div class="dropdown nxl-h-item">
-              <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside">
-                <img src="{% static 'assets/images/avatar/default_user.jpg' %}" alt="user-image" class="img-fluid user-avtar me-0 rounded-circle border" style="width: 30px;"/>
-              </a>
-              <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
-                
-     
-                <a href="./auth-login-minimal.html" class="dropdown-item">
-                  <i class="feather-log-in"></i>
-                  <span>Login</span>
-                </a>
-                <a href="./auth-login-minimal.html" class="dropdown-item">
-                  <i class="feather-at-sign"></i>
-                  <span>Register</span>
-                </a>
+                <a href="javascript:void(0);" data-bs-toggle="dropdown" role="button" data-bs-auto-close="outside"><img src="{% static 'assets/images/avatar/default_user.jpg' %}" alt="user-image" class="img-fluid user-avtar me-0 rounded-circle border" style="width: 30px;" /></a>
+                <div class="dropdown-menu dropdown-menu-end nxl-h-dropdown nxl-user-dropdown">
+                  <a href="./auth-login-minimal.html" class="dropdown-item">
+                    <i class="feather-log-in"></i>
+                    <span>Login</span>
+                  </a>
+                  <a href="./auth-login-minimal.html" class="dropdown-item">
+                    <i class="feather-at-sign"></i>
+                    <span>Register</span>
+                  </a>
+                </div>
               </div>
-            </div>
-          {% endif %}
+            {% endif %}
           </div>
         </div>
         <!-- ! [End] Header Right ! -->
@@ -421,15 +424,19 @@
         <div class="page-header">
           <div class="page-header-left d-flex align-items-center">
             <div class="page-header-title">
-              <h5 class="m-b-10">
-                Dashboard
-              </h5>
+              <h5 class="m-b-10">Dashboard</h5>
             </div>
             <ul class="breadcrumb">
               <li class="breadcrumb-item">
-               {% block dash_link %} <a href="">Home</a>{% endblock dash_link %}
+                {% block dash_link %}
+                  <a href="">Home</a>
+                {% endblock %}
               </li>
-              <li class="breadcrumb-item"> {% block dash_active %}Dashboard{% endblock dash_active %} </li>
+              <li class="breadcrumb-item">
+                {% block dash_active %}
+                  Dashboard
+                {% endblock %}
+              </li>
             </ul>
           </div>
           <div class="page-header-right ms-auto">
@@ -440,7 +447,6 @@
                   <span>Back</span>
                 </a>
               </div>
-
             </div>
             <div class="d-md-none d-flex align-items-center">
               <a href="javascript:void(0)" class="page-header-right-open-toggle"><i class="feather-align-right fs-20"></i></a>
@@ -448,16 +454,15 @@
           </div>
         </div>
 
-
         <div class="main-content">
-        {% if messages %}
+          {% if messages %}
             {% for message in messages %}
-            <div class="alert {{ message.tags }} alert-dismissible shadow fade show p-3 mx-auto mt-2"role="alert" style="width: 80%;">
-                {{ message | safe }}
+              <div class="alert {{ message.tags }} alert-dismissible shadow fade show p-3 mx-auto mt-2" role="alert" style="width: 80%;">
+                {{ message|safe }}
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+              </div>
             {% endfor %}
-        {% endif %}
+          {% endif %}
 
           {% block main_content %}
 
@@ -485,8 +490,7 @@
       <!-- [ Footer ] end -->
     </main>
 
-
-     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'assets/vendors/js/vendors.min.js' %} "></script>
     <script src="{% static 'assets/vendors/js/daterangepicker.min.js' %} "></script>
     {% comment %} <script src="{% static 'assets/vendors/js/apexcharts.min.js' %} "></script> {% endcomment %}
@@ -495,6 +499,8 @@
     {% comment %} <script src="{% static 'assets/js/dashboard-init.min.js' %} "></script> {% endcomment %}
     <script src="{% static 'assets/js/theme-customizer-init.min.js' %} "></script>
 
-    {% block script_tag %}{% endblock script_tag %}
+    {% block script_tag %}
+
+    {% endblock %}
   </body>
 </html>
