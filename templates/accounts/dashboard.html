@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 {% block title %}
   cms
 {% endblock %}
@@ -289,7 +290,7 @@
   <div class="row my-2">
 
     {% comment %} member user  {% endcomment %}
-    {% if profiles.count > 1 %}
+    {% if profiles.count > 0 %}
     <div class="col-md-4">
       <h5>Members ({{profiles.count}})</h5>
       <div class="card stretch stretch-full">
@@ -298,7 +299,7 @@
           <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
             <div class="hstack gap-3">
               <div class="avatar-image">
-                <img src="{{profile.get_profile_image}}" alt="photo" class="img-fluid" />
+                <img src="{% if profile.photo %}{{profile.get_profile_image}}{% else %}{% static "assets/images/default_user.jpg" %}{% endif %}" alt="photo" class="img-fluid" />
               </div>
               <div>
                 <a href="javascript:void(0);">{{profile.user.username|title}}</a>
@@ -322,7 +323,7 @@
           <div class="hstack justify-content-between border border-dashed rounded-3 p-3 mb-2">
             <div class="hstack gap-3">
               <div class="avatar-image">
-                <img src="{{profiles.get_profile_image}}" alt="photo" class="img-fluid" />
+                <img src="{% if profile.photo %}{{profile.get_profile_image}}{% else %}{% static "assets/images/default_user.jpg" %}{% endif %}" alt="photo" class="img-fluid" />
               </div>
               <div>
                 <a href="javascript:void(0);">{{profiles.user.username|title}}</a>
